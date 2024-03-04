@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.teach.mapper.SysStudentMapper">
+
+    <resultMap type="SysStudent" id="SysStudentResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="birth"    column="birth"    />
+        <result property="age"    column="age"    />
+        <result property="phone"    column="phone"    />
+        <result property="edu"    column="edu"    />
+        <result property="address"    column="address"    />
+        <result property="email"    column="email"    />
+        <result property="major"    column="major"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="classId"    column="class_id"    />
+        <result property="capacityComputer"    column="capacity_computer"    />
+        <result property="capacityLanguage"    column="capacity_language"    />
+        <result property="capacityMajor"    column="capacity_major"    />
+        <result property="evaluatePerson"    column="evaluate_person"    />
+        <result property="evaluateWork"    column="evaluate_work"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap id="SysStudentSysEducationResult" type="SysStudent" extends="SysStudentResult">
+        <collection property="sysEducationList" notNullColumn="sub_id" javaType="java.util.List" resultMap="SysEducationResult" />
+    </resultMap>
+
+    <resultMap type="SysEducation" id="SysEducationResult">
+        <result property="id"    column="sub_id"    />
+        <result property="studentId"    column="sub_student_id"    />
+        <result property="eduPeriod"    column="sub_edu_period"    />
+        <result property="college"    column="sub_college"    />
+        <result property="major"    column="sub_major"    />
+        <result property="edu"    column="sub_edu"    />
+        <result property="course"    column="sub_course"    />
+        <result property="createBy"    column="sub_create_by"    />
+        <result property="createTime"    column="sub_create_time"    />
+        <result property="updateBy"    column="sub_update_by"    />
+        <result property="updateTime"    column="sub_update_time"    />
+    </resultMap>
+
+    <sql id="selectSysStudentVo">
+        select id, name, birth, age, phone, edu, address, email, major, avatar, class_id, capacity_computer, capacity_language, capacity_major, evaluate_person, evaluate_work, create_by, create_time, update_by, update_time from sys_student
+    </sql>
+
+    <select id="selectSysStudentList" parameterType="SysStudent" resultMap="SysStudentResult">
+        <include refid="selectSysStudentVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="params.beginBirth != null and params.beginBirth != '' and params.endBirth != null and params.endBirth != ''"> and birth between #{params.beginBirth} and #{params.endBirth}</if>
+            <if test="edu != null  and edu != ''"> and edu = #{edu}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="classId != null "> and class_id = #{classId}</if>
+        </where>
+    </select>
+
+    <select id="selectSysStudentById" parameterType="Long" resultMap="SysStudentSysEducationResult">
+        select a.id, a.name, a.birth, a.age, a.phone, a.edu, a.address, a.email, a.major, a.avatar, a.class_id, a.capacity_computer, a.capacity_language, a.capacity_major, a.evaluate_person, a.evaluate_work, a.create_by, a.create_time, a.update_by, a.update_time,
+               b.id as sub_id, b.student_id as sub_student_id, b.edu_period as sub_edu_period, b.college as sub_college, b.major as sub_major, b.edu as sub_edu, b.course as sub_course, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time
+        from sys_student a
+                 left join sys_education b on b.student_id = a.id
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertSysStudent" parameterType="SysStudent" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="birth != null">birth,</if>
+            <if test="age != null">age,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="edu != null and edu != ''">edu,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="major != null and major != ''">major,</if>
+            <if test="avatar != null and avatar != ''">avatar,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="capacityComputer != null">capacity_computer,</if>
+            <if test="capacityLanguage != null">capacity_language,</if>
+            <if test="capacityMajor != null">capacity_major,</if>
+            <if test="evaluatePerson != null">evaluate_person,</if>
+            <if test="evaluateWork != null">evaluate_work,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="birth != null">#{birth},</if>
+            <if test="age != null">#{age},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="edu != null and edu != ''">#{edu},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="major != null and major != ''">#{major},</if>
+            <if test="avatar != null and avatar != ''">#{avatar},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="capacityComputer != null">#{capacityComputer},</if>
+            <if test="capacityLanguage != null">#{capacityLanguage},</if>
+            <if test="capacityMajor != null">#{capacityMajor},</if>
+            <if test="evaluatePerson != null">#{evaluatePerson},</if>
+            <if test="evaluateWork != null">#{evaluateWork},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysStudent" parameterType="SysStudent">
+        update sys_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="birth != null">birth = #{birth},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="edu != null and edu != ''">edu = #{edu},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="major != null and major != ''">major = #{major},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="capacityComputer != null">capacity_computer = #{capacityComputer},</if>
+            <if test="capacityLanguage != null">capacity_language = #{capacityLanguage},</if>
+            <if test="capacityMajor != null">capacity_major = #{capacityMajor},</if>
+            <if test="evaluatePerson != null">evaluate_person = #{evaluatePerson},</if>
+            <if test="evaluateWork != null">evaluate_work = #{evaluateWork},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysStudentById" parameterType="Long">
+        delete from sys_student where id = #{id}
+    </delete>
+
+    <delete id="deleteSysStudentByIds" parameterType="String">
+        delete from sys_student where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSysEducationByStudentIds" parameterType="String">
+        delete from sys_education where student_id in
+        <foreach item="studentId" collection="array" open="(" separator="," close=")">
+            #{studentId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSysEducationByStudentId" parameterType="Long">
+        delete from sys_education where student_id = #{studentId}
+    </delete>
+
+    <insert id="batchSysEducation">
+        insert into sys_education( id, student_id, edu_period, college, major, edu, course, create_by, create_time, update_by, update_time) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.studentId}, #{item.eduPeriod}, #{item.college}, #{item.major}, #{item.edu}, #{item.course}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime})
+        </foreach>
+    </insert>
+</mapper>

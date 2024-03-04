@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.teach.mapper.SysResourceMapper">
+
+    <resultMap type="SysResource" id="SysResourceResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="date"    column="date"    />
+        <result property="note"    column="note"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="addressFile"    column="address_file"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectSysResourceVo">
+        select id, name, date, note, type_id, type_name, address_file, create_time, update_time, create_by, update_by from sys_resource
+    </sql>
+
+    <select id="selectSysResourceList" parameterType="SysResource" resultMap="SysResourceResult">
+        <include refid="selectSysResourceVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="note != null  and note != ''"> and note = #{note}</if>
+            <if test="typeId != null "> and type_id = #{typeId}</if>
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="addressFile != null  and addressFile != ''"> and address_file = #{addressFile}</if>
+        </where>
+    </select>
+
+    <select id="selectSysResourceById" parameterType="Long" resultMap="SysResourceResult">
+        <include refid="selectSysResourceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysResource" parameterType="SysResource" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="date != null">date,</if>
+            <if test="note != null">note,</if>
+            <if test="typeId != null">type_id,</if>
+            <if test="typeName != null">type_name,</if>
+            <if test="addressFile != null">address_file,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="date != null">#{date},</if>
+            <if test="note != null">#{note},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="typeName != null">#{typeName},</if>
+            <if test="addressFile != null">#{addressFile},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysResource" parameterType="SysResource">
+        update sys_resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="note != null">note = #{note},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="addressFile != null">address_file = #{addressFile},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysResourceById" parameterType="Long">
+        delete from sys_resource where id = #{id}
+    </delete>
+
+    <delete id="deleteSysResourceByIds" parameterType="String">
+        delete from sys_resource where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
