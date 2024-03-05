@@ -2,8 +2,8 @@ package com.ruoyi.web.controller.teach;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.utils.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +44,18 @@ public class SysLabelController extends BaseController
     {
         List<SysLabel> list = sysLabelService.selectSysLabelList(sysLabel);
         return success(list);
+    }
+
+    /**
+     * 查询标签列表（排除节点）
+     */
+    @PreAuthorize("@ss.hasPermi('teach:label:list')")
+    @GetMapping("/list/exclude/{labelId}")
+    public AjaxResult excludeChild(@PathVariable(value = "labelId", required = false) Long labelId)
+    {
+        List<SysLabel> labels = sysLabelService.selectSysLabelList(new SysLabel());
+        labels.removeIf(d -> d.getLabelId().intValue() == labelId || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), labelId + ""));
+        return success(labels);
     }
 
     /**
