@@ -5,10 +5,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.core.domain.entity.SysLabel;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.teach.domain.SysResource;
+import com.ruoyi.teach.service.ISysLabelService;
 import com.ruoyi.teach.service.ISysResourceService;
 import com.ruoyi.web.controller.common.CommonController;
 import org.slf4j.Logger;
@@ -44,11 +46,12 @@ public class SysResourceController extends BaseController {
     @Autowired
     private ISysResourceService sysResourceService;
 
+    @Autowired
+    private ISysLabelService sysLabelService;
 
     /**
      * 查询资源库列表
      */
-    @PreAuthorize("@ss.hasPermi('teach:resource:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysResource sysResource) {
         startPage();
@@ -79,21 +82,42 @@ public class SysResourceController extends BaseController {
 
     /**
      * 新增资源库
+     * 首先知道他是哪个库的二级标签
+     * 其次要去展示他的最底层的labelId
      */
     @PreAuthorize("@ss.hasPermi('teach:resource:add')")
     @Log(title = "资源库", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysResource sysResource) {
+
+        //找到type二级标签
+        SysLabel sysLabel = sysLabelService.selectSysLabelByLabelId(sysResource.getLabelId());
+        String ancestors = sysLabel.getAncestors();
+        String[] split = ancestors.split(",");
+        sysResource.setTypeId(Integer.valueOf(split[2]));
+        //将labelId 最底层的标签给set进去
+        sysResource.setLabelId(sysResource.getLabelId());
         return toAjax(sysResourceService.insertSysResource(sysResource));
     }
 
     /**
      * 修改资源库
+     * 首先知道他是哪个库的二级标签
+     * 其次要去展示他的最底层的labelId
      */
     @PreAuthorize("@ss.hasPermi('teach:resource:edit')")
     @Log(title = "资源库", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysResource sysResource) {
+
+
+        //找到type二级标签
+        SysLabel sysLabel = sysLabelService.selectSysLabelByLabelId(sysResource.getLabelId());
+        String ancestors = sysLabel.getAncestors();
+        String[] split = ancestors.split(",");
+        sysResource.setTypeId(Integer.valueOf(split[2]));
+        //将labelId 最底层的标签给set进去
+        sysResource.setLabelId(sysResource.getLabelId());
         return toAjax(sysResourceService.updateSysResource(sysResource));
     }
 
@@ -112,10 +136,10 @@ public class SysResourceController extends BaseController {
      */
     @GetMapping("/download")
     public void downloadFile(String filepath, HttpServletResponse response, HttpServletRequest request) {
-        String prefix="/profile/upload";
+        String prefix = "/profile/upload";
         try {
             String[] split = filepath.split("/");
-            String realFileName = split[split.length-1];
+            String realFileName = split[split.length - 1];
             String filePath = RuoYiConfig.getUploadPath() + filepath;
             String realPath = filePath.replace(prefix, "");
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);

@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.teach;
 
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.TreeSelect;
 import com.ruoyi.common.utils.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,14 +27,13 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 
 /**
  * 标签信息Controller
- * 
+ *
  * @author sqc
  * @date 2024-02-28
  */
 @RestController
 @RequestMapping("/teach/label")
-public class SysLabelController extends BaseController
-{
+public class SysLabelController extends BaseController {
     @Autowired
     private ISysLabelService sysLabelService;
 
@@ -40,8 +42,7 @@ public class SysLabelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('teach:label:list')")
     @GetMapping("/list")
-    public AjaxResult list(SysLabel sysLabel)
-    {
+    public AjaxResult list(SysLabel sysLabel) {
         List<SysLabel> list = sysLabelService.selectSysLabelList(sysLabel);
         return success(list);
     }
@@ -51,8 +52,7 @@ public class SysLabelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('teach:label:list')")
     @GetMapping("/list/exclude/{labelId}")
-    public AjaxResult excludeChild(@PathVariable(value = "labelId", required = false) Long labelId)
-    {
+    public AjaxResult excludeChild(@PathVariable(value = "labelId", required = false) Long labelId) {
         List<SysLabel> labels = sysLabelService.selectSysLabelList(new SysLabel());
         labels.removeIf(d -> d.getLabelId().intValue() == labelId || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), labelId + ""));
         return success(labels);
@@ -64,8 +64,7 @@ public class SysLabelController extends BaseController
     @PreAuthorize("@ss.hasPermi('teach:label:export')")
     @Log(title = "标签信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysLabel sysLabel)
-    {
+    public void export(HttpServletResponse response, SysLabel sysLabel) {
         List<SysLabel> list = sysLabelService.selectSysLabelList(sysLabel);
         ExcelUtil<SysLabel> util = new ExcelUtil<SysLabel>(SysLabel.class);
         util.exportExcel(response, list, "标签信息数据");
@@ -76,8 +75,7 @@ public class SysLabelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('teach:label:query')")
     @GetMapping(value = "/{labelId}")
-    public AjaxResult getInfo(@PathVariable("labelId") Long labelId)
-    {
+    public AjaxResult getInfo(@PathVariable("labelId") Long labelId) {
         return success(sysLabelService.selectSysLabelByLabelId(labelId));
     }
 
@@ -87,8 +85,7 @@ public class SysLabelController extends BaseController
     @PreAuthorize("@ss.hasPermi('teach:label:add')")
     @Log(title = "标签信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysLabel sysLabel)
-    {
+    public AjaxResult add(@RequestBody SysLabel sysLabel) {
         return toAjax(sysLabelService.insertSysLabel(sysLabel));
     }
 
@@ -98,8 +95,7 @@ public class SysLabelController extends BaseController
     @PreAuthorize("@ss.hasPermi('teach:label:edit')")
     @Log(title = "标签信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysLabel sysLabel)
-    {
+    public AjaxResult edit(@RequestBody SysLabel sysLabel) {
         return toAjax(sysLabelService.updateSysLabel(sysLabel));
     }
 
@@ -108,9 +104,8 @@ public class SysLabelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('teach:label:remove')")
     @Log(title = "标签信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{labelIds}")
-    public AjaxResult remove(@PathVariable Long[] labelIds)
-    {
+    @DeleteMapping("/{labelIds}")
+    public AjaxResult remove(@PathVariable Long[] labelIds) {
         return toAjax(sysLabelService.deleteSysLabelByLabelIds(labelIds));
     }
 
@@ -119,8 +114,32 @@ public class SysLabelController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('teach:label:list')")
     @GetMapping("/labelTree")
-    public AjaxResult labelTree(SysLabel label)
-    {
+    public AjaxResult labelTree(SysLabel label) {
         return success(sysLabelService.selectLabelTreeList(label));
     }
+
+    /**
+     * 根据labelId查找出祖级id数组给前端的修改效果
+     */
+    @PreAuthorize("@ss.hasPermi('teach:label:list')")
+    @GetMapping("/labelAncestorNameList")
+    public AjaxResult labelAncestorNameList(SysLabel label) {
+        SysLabel sysLabel = sysLabelService.selectSysLabelByLabelId(label.getLabelId());
+        String tmp = sysLabel.getAncestors();
+        String ancestors = tmp + "," + label.getLabelId();
+        String[] splitAncestors = ancestors.split(",");
+        String[] splitAncestosWithoutFirst = null;
+        //将标签的顶级给去除
+        if (splitAncestors.length > 2) {
+            splitAncestosWithoutFirst = Arrays.copyOfRange(splitAncestors, 2, splitAncestors.length);
+        }
+        //前端展示只能读取和id属性一致的 这里的id是int
+        Integer[] integers = new Integer[splitAncestosWithoutFirst.length];
+        for(int i=0;i<splitAncestosWithoutFirst.length;i++){
+            integers[i]=Integer.valueOf(splitAncestosWithoutFirst[i]);
+        }
+        return success(integers);
+    }
+
+
 }

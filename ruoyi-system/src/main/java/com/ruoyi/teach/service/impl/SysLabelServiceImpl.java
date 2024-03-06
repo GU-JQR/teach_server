@@ -19,19 +19,19 @@ import com.ruoyi.teach.service.ISysLabelService;
 
 /**
  * 标签信息Service业务层处理
- * 
+ *
  * @author sqc
  * @date 2024-02-28
  */
 @Service
-public class SysLabelServiceImpl implements ISysLabelService 
+public class SysLabelServiceImpl implements ISysLabelService
 {
     @Autowired
     private SysLabelMapper sysLabelMapper;
 
     /**
      * 查询标签信息
-     * 
+     *
      * @param labelId 标签信息主键
      * @return 标签信息
      */
@@ -43,7 +43,7 @@ public class SysLabelServiceImpl implements ISysLabelService
 
     /**
      * 查询标签信息列表
-     * 
+     *
      * @param sysLabel 标签信息
      * @return 标签信息
      */
@@ -55,7 +55,7 @@ public class SysLabelServiceImpl implements ISysLabelService
 
     /**
      * 新增标签信息
-     * 
+     *
      * @param sysLabel 标签信息
      * @return 结果
      */
@@ -78,7 +78,7 @@ public class SysLabelServiceImpl implements ISysLabelService
 
     /**
      * 修改标签信息
-     * 
+     *
      * @param sysLabel 标签信息
      * @return 结果
      */
@@ -140,7 +140,7 @@ public class SysLabelServiceImpl implements ISysLabelService
 
     /**
      * 批量删除标签信息
-     * 
+     *
      * @param labelIds 需要删除的标签信息主键
      * @return 结果
      */
@@ -152,7 +152,7 @@ public class SysLabelServiceImpl implements ISysLabelService
 
     /**
      * 删除标签信息信息
-     * 
+     *
      * @param labelId 标签信息主键
      * @return 结果
      */
@@ -174,6 +174,13 @@ public class SysLabelServiceImpl implements ISysLabelService
     public List<TreeSelect> selectLabelTreeList(SysLabel label){
         List<SysLabel> labels = sysLabelMapper.selectSysLabelList(label);
         return buildLabelTreeSelect(labels);
+    }
+
+    @Override
+    public List<TreeSelect> labelAncestorNameList(String[] splitAncestors) {
+
+        List<SysLabel> labelList = sysLabelMapper.labelAncestorNameList(splitAncestors);
+        return buildLabelTreeSelect(labelList);
     }
 
     /**
@@ -215,6 +222,9 @@ public class SysLabelServiceImpl implements ISysLabelService
         }
         return returnList;
     }
+
+
+
 
     /**
      * 递归列表

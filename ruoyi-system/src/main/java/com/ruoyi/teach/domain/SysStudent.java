@@ -63,6 +63,9 @@ public class SysStudent extends BaseEntity
     @Excel(name = "班级")
     private Long classId;
 
+    /** 班级名称 */
+    private String className;
+
     /** 计算机能力 */
     private String capacityComputer;
 
@@ -180,7 +183,16 @@ public class SysStudent extends BaseEntity
     {
         return classId;
     }
-    public void setCapacityComputer(String capacityComputer) 
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public void setCapacityComputer(String capacityComputer)
     {
         this.capacityComputer = capacityComputer;
     }

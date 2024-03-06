@@ -6,15 +6,15 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * 标签信息Mapper接口
- * 
+ *
  * @author sqc
  * @date 2024-02-28
  */
-public interface SysLabelMapper 
+public interface SysLabelMapper
 {
     /**
      * 查询标签信息
-     * 
+     *
      * @param labelId 标签信息主键
      * @return 标签信息
      */
@@ -30,7 +30,7 @@ public interface SysLabelMapper
 
     /**
      * 查询标签信息列表
-     * 
+     *
      * @param sysLabel 标签信息
      * @return 标签信息集合
      */
@@ -38,7 +38,7 @@ public interface SysLabelMapper
 
     /**
      * 新增标签信息
-     * 
+     *
      * @param sysLabel 标签信息
      * @return 结果
      */
@@ -46,7 +46,7 @@ public interface SysLabelMapper
 
     /**
      * 修改标签信息
-     * 
+     *
      * @param sysLabel 标签信息
      * @return 结果
      */
@@ -54,7 +54,7 @@ public interface SysLabelMapper
 
     /**
      * 删除标签信息
-     * 
+     *
      * @param labelId 标签信息主键
      * @return 结果
      */
@@ -83,10 +83,16 @@ public interface SysLabelMapper
 
     /**
      * 批量删除标签信息
-     * 
+     *
      * @param labelIds 需要删除的数据主键集合
      * @return 结果
      */
     public int deleteSysLabelByLabelIds(Long[] labelIds);
 
+    /**
+     * 返回父级列表
+     * @param splitAncestors
+     * @return
+     */
+    List<SysLabel> labelAncestorNameList(String[] splitAncestors);
 }

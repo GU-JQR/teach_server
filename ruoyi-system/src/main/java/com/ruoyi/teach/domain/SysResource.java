@@ -20,6 +20,7 @@ public class SysResource extends BaseEntity
     /** 主键 */
     private Long id;
 
+
     /** 资源名称 */
     @Excel(name = "资源名称")
     private String name;
@@ -44,6 +45,17 @@ public class SysResource extends BaseEntity
     /** 文件地址 */
     @Excel(name = "文件地址")
     private String addressFile;
+
+    // labelId 查询typeID
+    private Long labelId;
+
+    public Long getLabelId() {
+        return labelId;
+    }
+
+    public void setLabelId(Long labelId) {
+        this.labelId = labelId;
+    }
 
     public void setId(Long id)
     {
