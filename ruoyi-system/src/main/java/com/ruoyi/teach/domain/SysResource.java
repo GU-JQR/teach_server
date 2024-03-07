@@ -49,6 +49,27 @@ public class SysResource extends BaseEntity
     // labelId 查询typeID
     private Long labelId;
 
+    //文件类型
+    private String fileType;
+
+    private String delFlag;
+
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
     public Long getLabelId() {
         return labelId;
     }

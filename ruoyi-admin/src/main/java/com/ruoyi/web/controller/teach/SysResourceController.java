@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -89,14 +90,19 @@ public class SysResourceController extends BaseController {
     @Log(title = "资源库", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysResource sysResource) {
-
-        //找到type二级标签
-        SysLabel sysLabel = sysLabelService.selectSysLabelByLabelId(sysResource.getLabelId());
-        String ancestors = sysLabel.getAncestors();
-        String[] split = ancestors.split(",");
-        sysResource.setTypeId(Integer.valueOf(split[2]));
+        //=======通过前端传递过来的labelId将字段typeId和typeName（二级标签）保存=====
         //将labelId 最底层的标签给set进去
+        SysLabel sysLabel = sysLabelService.selectSysLabelByLabelId(sysResource.getLabelId());
         sysResource.setLabelId(sysResource.getLabelId());
+        sysResource.setTypeName(sysLabel.getLabelName());
+        //============处理fileType后缀===========
+        String addressFile = sysResource.getAddressFile();
+        String[] splitList = addressFile.split("/");
+        String last = splitList[splitList.length - 1];
+        //防止用户文件名有多个 "."
+        String[] suffixList = last.split("\\.");
+        String suffix = suffixList[suffixList.length - 1];
+        sysResource.setFileType(suffix);
         return toAjax(sysResourceService.insertSysResource(sysResource));
     }
 
@@ -109,15 +115,19 @@ public class SysResourceController extends BaseController {
     @Log(title = "资源库", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysResource sysResource) {
-
-
         //找到type二级标签
         SysLabel sysLabel = sysLabelService.selectSysLabelByLabelId(sysResource.getLabelId());
-        String ancestors = sysLabel.getAncestors();
-        String[] split = ancestors.split(",");
-        sysResource.setTypeId(Integer.valueOf(split[2]));
         //将labelId 最底层的标签给set进去
         sysResource.setLabelId(sysResource.getLabelId());
+        sysResource.setTypeName(sysLabel.getLabelName());
+        //============处理fileType后缀===========
+        String addressFile = sysResource.getAddressFile();
+        String[] splitList = addressFile.split("/");
+        String last = splitList[splitList.length - 1];
+        //防止用户文件名有多个 "."
+        String[] suffixList = last.split("\\.");
+        String suffix = suffixList[suffixList.length - 1];
+        sysResource.setFileType(suffix);
         return toAjax(sysResourceService.updateSysResource(sysResource));
     }
 
