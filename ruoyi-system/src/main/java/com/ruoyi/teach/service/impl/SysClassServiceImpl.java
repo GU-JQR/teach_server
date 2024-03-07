@@ -1,7 +1,9 @@
 package com.ruoyi.teach.service.impl;
 
-import java.util.List;
+import java.util.*;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.teach.domain.vo.ClassTreeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.teach.mapper.SysClassMapper;
@@ -54,6 +56,7 @@ public class SysClassServiceImpl implements ISysClassService
     public int insertSysClass(SysClass sysClass)
     {
         sysClass.setCreateTime(DateUtils.getNowDate());
+        sysClass.setYear(Calendar.getInstance().get(Calendar.YEAR));
         return sysClassMapper.insertSysClass(sysClass);
     }
 
@@ -92,5 +95,32 @@ public class SysClassServiceImpl implements ISysClassService
     public int deleteSysClassById(Long id)
     {
         return sysClassMapper.deleteSysClassById(id);
+    }
+
+    /**
+     * 查询期数树结构信息
+     *
+     * @param sysClass 期数信息
+     * @return 期数树信息集合
+     */
+    @Override
+    public List<ClassTreeVO> selectClassTreeList(SysClass sysClass){
+        List<SysClass> classes = sysClassMapper.selectSysClassList(sysClass);
+        Map<Integer,List<ClassTreeVO>> map = new HashMap<>();
+        List<ClassTreeVO> list = new ArrayList<>();
+        ClassTreeVO top = new ClassTreeVO(0L,"年份");
+        for (SysClass item:classes) {
+            if(!StringUtils.isNotNull(map.get(item.getYear()))){
+                map.put(item.getYear(),new ArrayList<>());
+            }
+            map.get(item.getYear()).add(new ClassTreeVO(item.getId(),item.getName()));
+        }
+        for (Integer key : map.keySet()) { //遍历key
+            ClassTreeVO node = new ClassTreeVO(0L,key.toString());
+            node.setChildren(map.get(key));
+            top.getChildren().add(node);
+        }
+        list.add(top);
+        return list;
     }
 }

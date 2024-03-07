@@ -140,6 +140,4 @@ public class SysLabelController extends BaseController {
         }
         return success(integers);
     }
-
-
 }

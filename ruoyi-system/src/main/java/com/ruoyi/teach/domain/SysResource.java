@@ -36,7 +36,7 @@ public class SysResource extends BaseEntity
 
     /** 资源类型 */
     @Excel(name = "资源类型")
-    private Integer typeId;
+    private String typeId;
 
     /** 资源类型名称 */
     @Excel(name = "资源类型名称")
@@ -114,12 +114,12 @@ public class SysResource extends BaseEntity
     {
         return note;
     }
-    public void setTypeId(Integer typeId)
+    public void setTypeId(String typeId)
     {
         this.typeId = typeId;
     }
 
-    public Integer getTypeId()
+    public String getTypeId()
     {
         return typeId;
     }

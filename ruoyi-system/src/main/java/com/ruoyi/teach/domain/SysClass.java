@@ -45,7 +45,17 @@ public class SysClass extends BaseEntity
     /** 删除标志 */
     private String delFlag;
 
-    public void setId(Long id) 
+    private Integer year;
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

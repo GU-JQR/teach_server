@@ -111,4 +111,13 @@ public class SysClassController extends BaseController
     {
         return toAjax(sysClassService.deleteSysClassByIds(ids));
     }
+
+    /**
+     * 获取期数树列表
+     */
+    @PreAuthorize("@ss.hasPermi('teach:class:list')")
+    @GetMapping("/classTree")
+    public AjaxResult classTree(SysClass sysClass) {
+        return success(sysClassService.selectClassTreeList(sysClass));
+    }
 }

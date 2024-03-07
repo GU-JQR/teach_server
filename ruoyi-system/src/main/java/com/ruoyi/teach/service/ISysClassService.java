@@ -2,6 +2,7 @@ package com.ruoyi.teach.service;
 
 import java.util.List;
 import com.ruoyi.teach.domain.SysClass;
+import com.ruoyi.teach.domain.vo.ClassTreeVO;
 
 /**
  * 学员分期Service接口
@@ -58,4 +59,12 @@ public interface ISysClassService
      * @return 结果
      */
     public int deleteSysClassById(Long id);
+
+    /**
+     * 查询期数树结构信息
+     *
+     * @param sysClass 期数信息
+     * @return 期数树信息集合
+     */
+    public List<ClassTreeVO> selectClassTreeList(SysClass sysClass);
 }
