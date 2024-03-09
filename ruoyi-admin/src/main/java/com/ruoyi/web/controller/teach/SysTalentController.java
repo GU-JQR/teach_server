@@ -32,13 +32,8 @@ import java.util.stream.Collectors;
 public class SysTalentController extends BaseController {
     @Autowired
     private ISysTalentService sysTalentService;
-
-
     @Autowired
     private ISysLabelService sysLabelService;
-
-
-
     /**
      * 查询人才管理列表
      * 支持模糊查询 标签 content
@@ -46,7 +41,6 @@ public class SysTalentController extends BaseController {
     @PreAuthorize("@ss.hasPermi('teach:talent:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysTalent sysTalent) {
-
 //        logger.info("sysTalent====={}",sysTalent);
         //分页
         startPage();
@@ -83,17 +77,9 @@ public class SysTalentController extends BaseController {
     @Log(title = "人才管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysTalent sysTalent) {
-        /**
-         * 通过查询labelName 然后再弄到sysTalent中
-         */
-        SysLabel sysLabel = sysLabelService.selectSysLabelByLabelId(Long.valueOf(sysTalent.getLabelId()));
-        if(sysLabel!=null){
-            sysTalent.setLabelName(sysLabel.getLabelName());
-        }
-
-        return toAjax(sysTalentService.insertSysTalent(sysTalent));
+        SysTalent sysTalent1 = talentHandler(sysTalent);
+        return toAjax(sysTalentService.insertSysTalent(sysTalent1));
     }
-
     /**
      * 修改人才管理
      */
@@ -101,22 +87,24 @@ public class SysTalentController extends BaseController {
     @Log(title = "人才管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysTalent sysTalent) {
+        SysTalent sysTalent1 = talentHandler(sysTalent);
+        return toAjax(sysTalentService.updateSysTalent(sysTalent1));
+    }
 
+    private SysTalent talentHandler(SysTalent sysTalent){
         /**
          * 通过查询labelName 然后再set到sysTalent中
          */
-
         SysLabel sysLabel = sysLabelService.selectSysLabelByLabelId(Long.valueOf(sysTalent.getLabelId()));
         if(sysLabel!=null){
             sysTalent.setLabelName(sysLabel.getLabelName());
-
         }
-
-        return toAjax(sysTalentService.updateSysTalent(sysTalent));
+        return sysTalent;
     }
 
     /**
      * 删除人才管理
+     * 逻辑删除
      */
     @PreAuthorize("@ss.hasPermi('teach:talent:remove')")
     @Log(title = "人才管理", businessType = BusinessType.DELETE)

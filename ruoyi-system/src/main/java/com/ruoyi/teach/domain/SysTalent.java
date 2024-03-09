@@ -77,6 +77,17 @@ public class SysTalent extends BaseEntity {
      */
     private String content;
 
+    //单位
+    private String unit;
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

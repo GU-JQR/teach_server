@@ -9,6 +9,7 @@
         <result property="name" column="name"/>
         <result property="area" column="area"/>
         <result property="phone" column="phone"/>
+        <result property="unit" column="unit"/>
         <result property="labelName" column="label_name"/>
         <result property="labelId" column="label_id"/>
         <result property="delFlag" column="del_flag"/>
@@ -25,6 +26,7 @@
                name,
                area,
                phone,
+               unit,
                label_name,
                label_id,
                del_flag,
@@ -40,19 +42,19 @@
     <!--=============模糊查询========-->
     <select id="selectSysTalentList" parameterType="SysTalent" resultMap="SysTalentResult">
         <include refid="selectSysTalentVo"/>
-        <!--
-            后台的模糊查询
-            当labelId是空值时候说明是后台人才库的模糊查询
-         -->
         <where>
+            <!-- 始终存在的条件：只查询未被删除的记录 -->
+            del_flag='0'
             <!-- 后台人才库的模糊查询，当labelId为空值时执行 -->
             <if test="labelId == null or labelId == ''">
                 <!-- 在多个字段上执行基于content的模糊查询 -->
                 <if test="content != null and content != ''">
-                    or name like concat('%', #{content}, '%')
+                    and (
+                    name like concat('%', #{content}, '%')
                     or label_name like concat('%', #{content}, '%')
                     or phone like concat('%', #{content}, '%')
                     or area like concat('%', #{content}, '%')
+                    or unit like concat('%', #{content} ,'%')
                     <!-- 特殊处理性别字段 -->
                     <if test="content.equals('男')">
                         or sex='0'
@@ -60,28 +62,27 @@
                     <if test="content.equals('女')">
                         or sex='1'
                     </if>
+                    )
                 </if>
             </if>
 
             <!-- 前端人才库页面的模糊查询，当labelId非空时执行 -->
             <if test="labelId != null and labelId != '' ">
-                <!-- 在指定字段上执行基于labelId和content的模糊查询 -->
-                label_id = #{labelId}
+                and label_id = #{labelId}
                 <if test="content != null and content != ''">
-                    and
-                    (name like concat('%', #{content}, '%')
+                    and (
+                    name like concat('%', #{content}, '%')
                     or phone like concat('%', #{content}, '%')
-                    or area like concat('%', #{content}, '%'))
+                    or area like concat('%', #{content}, '%')
+                    )
                 </if>
-
-
             </if>
         </where>
     </select>
 
     <select id="selectSysTalentById" parameterType="Long" resultMap="SysTalentResult">
         <include refid="selectSysTalentVo"/>
-        where id = #{id}
+        where id = #{id} and del_flag='0'
     </select>
 
     <insert id="insertSysTalent" parameterType="SysTalent" useGeneratedKeys="true" keyProperty="id">
@@ -90,6 +91,7 @@
             <if test="name != null and name != ''">name,</if>
             <if test="area != null">area,</if>
             <if test="phone != null and phone != ''">phone,</if>
+            <if test="unit != null and unit != ''">unit,</if>
             <if test="labelName != null">label_name,</if>
             <if test="labelId != null">label_id,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -104,6 +106,7 @@
             <if test="name != null and name != ''">#{name},</if>
             <if test="area != null">#{area},</if>
             <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="unit != null and unit != ''">#{unit},</if>
             <if test="labelName != null">#{labelName},</if>
             <if test="labelId != null">#{labelId},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -122,6 +125,7 @@
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="area != null">area = #{area},</if>
             <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="unit != null and unit != ''">unit = #{unit},</if>
             <if test="labelName != null">label_name = #{labelName},</if>
             <if test="labelId != null">label_id = #{labelId},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
@@ -135,16 +139,20 @@
         where id = #{id}
     </update>
 
-    <delete id="deleteSysTalentById" parameterType="Long">
-        delete
+    <update id="deleteSysTalentById" parameterType="Long">
+        update
         from sys_talent
+        set del_flag='1'
         where id = #{id}
-    </delete>
-
-    <delete id="deleteSysTalentByIds" parameterType="String">
-        delete from sys_talent where id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
+    </update>
+    <update id="deleteSysTalentByIds" parameterType="String">
+        update sys_talent
+        set  del_flag = '1'
+        where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
+
+
 </mapper>
