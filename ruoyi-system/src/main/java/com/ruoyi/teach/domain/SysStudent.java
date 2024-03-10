@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 学员信息对象 sys_student
- * 
+ *
  * @author sqc
  * @date 2024-03-03
  */
@@ -83,103 +83,183 @@ public class SysStudent extends BaseEntity
 
     /** 教育经历信息信息 */
     private List<SysEducation> sysEducationList;
+    //提高标志
+    private String enhanceFlag;
+    //综合能力
+    private String capacityLevel;
+    //优的数量
+    private Integer level3;
+    //良的数量
+    private Integer level2;
+    //及格的数量
+    private Integer level1;
+    //不及格的数量
+    private Integer level0;
+    //某个classId的学生总数
+    private Integer classStuCount;
+    //提升的数量
+    private Integer enhanceCount;
 
-    public void setId(Long id) 
+    public String getCapacityLevel() {
+        return capacityLevel;
+    }
+
+    public void setCapacityLevel(String capacityLevel) {
+        this.capacityLevel = capacityLevel;
+    }
+
+    public String getEnhanceFlag() {
+        return enhanceFlag;
+    }
+
+    public void setEnhanceFlag(String enhanceFlag) {
+        this.enhanceFlag = enhanceFlag;
+    }
+
+    public Integer getEnhanceCount() {
+        return enhanceCount;
+    }
+
+    public void setEnhanceCount(Integer enhanceCount) {
+        this.enhanceCount = enhanceCount;
+    }
+
+    public Integer getClassStuCount() {
+        return classStuCount;
+    }
+
+    public void setClassStuCount(Integer classStuCount) {
+        this.classStuCount = classStuCount;
+    }
+
+    public Integer getLevel3() {
+        return level3;
+    }
+
+    public void setLevel3(Integer level3) {
+        this.level3 = level3;
+    }
+
+    public Integer getLevel2() {
+        return level2;
+    }
+
+    public void setLevel2(Integer level2) {
+        this.level2 = level2;
+    }
+
+    public Integer getLevel1() {
+        return level1;
+    }
+
+    public void setLevel1(Integer level1) {
+        this.level1 = level1;
+    }
+
+    public Integer getLevel0() {
+        return level0;
+    }
+
+    public void setLevel0(Integer level0) {
+        this.level0 = level0;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }
 
-    public String getName() 
+    public String getName()
     {
         return name;
     }
-    public void setBirth(Date birth) 
+    public void setBirth(Date birth)
     {
         this.birth = birth;
     }
 
-    public Date getBirth() 
+    public Date getBirth()
     {
         return birth;
     }
-    public void setAge(Integer age) 
+    public void setAge(Integer age)
     {
         this.age = age;
     }
 
-    public Integer getAge() 
+    public Integer getAge()
     {
         return age;
     }
-    public void setPhone(String phone) 
+    public void setPhone(String phone)
     {
         this.phone = phone;
     }
 
-    public String getPhone() 
+    public String getPhone()
     {
         return phone;
     }
-    public void setEdu(String edu) 
+    public void setEdu(String edu)
     {
         this.edu = edu;
     }
 
-    public String getEdu() 
+    public String getEdu()
     {
         return edu;
     }
-    public void setAddress(String address) 
+    public void setAddress(String address)
     {
         this.address = address;
     }
 
-    public String getAddress() 
+    public String getAddress()
     {
         return address;
     }
-    public void setEmail(String email) 
+    public void setEmail(String email)
     {
         this.email = email;
     }
 
-    public String getEmail() 
+    public String getEmail()
     {
         return email;
     }
-    public void setMajor(String major) 
+    public void setMajor(String major)
     {
         this.major = major;
     }
 
-    public String getMajor() 
+    public String getMajor()
     {
         return major;
     }
-    public void setAvatar(String avatar) 
+    public void setAvatar(String avatar)
     {
         this.avatar = avatar;
     }
 
-    public String getAvatar() 
+    public String getAvatar()
     {
         return avatar;
     }
-    public void setClassId(Long classId) 
+    public void setClassId(Long classId)
     {
         this.classId = classId;
     }
 
-    public Long getClassId() 
+    public Long getClassId()
     {
         return classId;
     }
@@ -197,43 +277,43 @@ public class SysStudent extends BaseEntity
         this.capacityComputer = capacityComputer;
     }
 
-    public String getCapacityComputer() 
+    public String getCapacityComputer()
     {
         return capacityComputer;
     }
-    public void setCapacityLanguage(String capacityLanguage) 
+    public void setCapacityLanguage(String capacityLanguage)
     {
         this.capacityLanguage = capacityLanguage;
     }
 
-    public String getCapacityLanguage() 
+    public String getCapacityLanguage()
     {
         return capacityLanguage;
     }
-    public void setCapacityMajor(String capacityMajor) 
+    public void setCapacityMajor(String capacityMajor)
     {
         this.capacityMajor = capacityMajor;
     }
 
-    public String getCapacityMajor() 
+    public String getCapacityMajor()
     {
         return capacityMajor;
     }
-    public void setEvaluatePerson(String evaluatePerson) 
+    public void setEvaluatePerson(String evaluatePerson)
     {
         this.evaluatePerson = evaluatePerson;
     }
 
-    public String getEvaluatePerson() 
+    public String getEvaluatePerson()
     {
         return evaluatePerson;
     }
-    public void setEvaluateWork(String evaluateWork) 
+    public void setEvaluateWork(String evaluateWork)
     {
         this.evaluateWork = evaluateWork;
     }
 
-    public String getEvaluateWork() 
+    public String getEvaluateWork()
     {
         return evaluateWork;
     }

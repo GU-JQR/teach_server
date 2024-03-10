@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.teach;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.teach.service.ISysClassService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 学员信息Controller
- * 
+ *
  * @author sqc
  * @date 2024-03-03
  */
@@ -34,6 +36,8 @@ public class SysStudentController extends BaseController
     @Autowired
     private ISysStudentService sysStudentService;
 
+    @Autowired
+    private ISysClassService sysClassService;
     /**
      * 查询学员信息列表
      */
@@ -44,6 +48,16 @@ public class SysStudentController extends BaseController
         startPage();
         List<SysStudent> list = sysStudentService.selectSysStudentList(sysStudent);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询全部学员信息列表
+     */
+    @PreAuthorize("@ss.hasPermi('teach:student:list')")
+    @GetMapping("/listAll")
+    public AjaxResult listAll(SysStudent sysStudent)
+    {
+        return success(sysStudentService.selectSysStudentListAll(sysStudent));
     }
 
     /**
@@ -100,5 +114,29 @@ public class SysStudentController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(sysStudentService.deleteSysStudentByIds(ids));
+    }
+
+    /**
+     * 当前期和上一期学员成绩数据
+     */
+    @PreAuthorize("@ss.hasPermi('teach:student:query')")
+    @GetMapping(value = "/stuInfo/{classId}")
+    public AjaxResult stuInfo(@PathVariable("classId") Long classId)
+    {
+        return success(sysStudentService.selectSysStudentByClassId(classId));
+    }
+    //查询最新一期的学员ClassId
+    @PreAuthorize("@ss.hasPermi('teach:student:query')")
+    @GetMapping(value = "/getNowClass")
+    public AjaxResult getNowClass()
+    {
+        return success(sysClassService.selectNowClassId().getId());
+    }
+    //查找表信息
+    @PreAuthorize("@ss.hasPermi('teach:student:query')")
+    @GetMapping(value = "/getChartInfo/{id}")
+    public AjaxResult getChartInfo(@PathVariable Long id )
+    {
+        return sysClassService.selectChartInfoById(id);
     }
 }

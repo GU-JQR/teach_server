@@ -3,7 +3,6 @@ package com.ruoyi.teach.service;
 import com.ruoyi.teach.domain.SysResource;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -66,7 +65,7 @@ public interface ISysResourceService
      * @description:
      * @return: java.util.List<java.lang.Long>
      **/
-    List<Map<String,Long>> countByCategoryType();
+    long[] countByCategoryType();
 
-    List<Double> getUpdateDate();
+    double[] getUpdateDate();
 }

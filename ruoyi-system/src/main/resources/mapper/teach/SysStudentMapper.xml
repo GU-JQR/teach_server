@@ -1,69 +1,174 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.teach.mapper.SysStudentMapper">
 
     <resultMap type="SysStudent" id="SysStudentResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="birth"    column="birth"    />
-        <result property="age"    column="age"    />
-        <result property="phone"    column="phone"    />
-        <result property="edu"    column="edu"    />
-        <result property="address"    column="address"    />
-        <result property="email"    column="email"    />
-        <result property="major"    column="major"    />
-        <result property="avatar"    column="avatar"    />
-        <result property="classId"    column="class_id"    />
-        <result property="capacityComputer"    column="capacity_computer"    />
-        <result property="capacityLanguage"    column="capacity_language"    />
-        <result property="capacityMajor"    column="capacity_major"    />
-        <result property="evaluatePerson"    column="evaluate_person"    />
-        <result property="evaluateWork"    column="evaluate_work"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="birth" column="birth"/>
+        <result property="age" column="age"/>
+        <result property="phone" column="phone"/>
+        <result property="edu" column="edu"/>
+        <result property="address" column="address"/>
+        <result property="email" column="email"/>
+        <result property="major" column="major"/>
+        <result property="avatar" column="avatar"/>
+        <result property="classId" column="class_id"/>
+        <result property="enhanceFlag" column="enhance_flag"/>
+        <result property="capacityLevel" column="capacity_level"/>
+        <result property="capacityComputer" column="capacity_computer"/>
+        <result property="capacityLanguage" column="capacity_language"/>
+        <result property="capacityMajor" column="capacity_major"/>
+        <result property="evaluatePerson" column="evaluate_person"/>
+        <result property="evaluateWork" column="evaluate_work"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="className" column="class_name"/>
+    </resultMap>
+    <!--优良率映射-->
+    <resultMap type="SysStudent" id="ClassIdSyStudent">
+        <!-- 映射 level3 字段到查询结果的 "level3" 列 -->
+        <result property="level3" column="level3" javaType="java.lang.Integer"/>
+        <!-- 映射 level2 字段到查询结果的 "level2" 列 -->
+        <result property="level2" column="level2" javaType="java.lang.Integer"/>
+        <!-- 映射 level1 字段到查询结果的 "level1" 列 -->
+        <result property="level1" column="level1" javaType="java.lang.Integer"/>
+        <!-- 映射 level0 字段到查询结果的 "level0" 列 -->
+        <result property="level0" column="level0" javaType="java.lang.Integer"/>
+        <!-- 映射 classStuCount 字段到查询结果的 "classStuCount" 列 -->
+        <result property="classStuCount" column="classStuCount" javaType="java.lang.Integer"/>
+        <!-- 映射 enhanceCount 字段到查询结果的 "enhanceCount" 列 -->
+        <result property="enhanceCount" column="enhanceCount" javaType="java.lang.Integer"/>
+
     </resultMap>
 
     <resultMap id="SysStudentSysEducationResult" type="SysStudent" extends="SysStudentResult">
-        <collection property="sysEducationList" notNullColumn="sub_id" javaType="java.util.List" resultMap="SysEducationResult" />
+        <collection property="sysEducationList" notNullColumn="sub_id" javaType="java.util.List"
+                    resultMap="SysEducationResult"/>
     </resultMap>
 
     <resultMap type="SysEducation" id="SysEducationResult">
-        <result property="id"    column="sub_id"    />
-        <result property="studentId"    column="sub_student_id"    />
-        <result property="eduPeriod"    column="sub_edu_period"    />
-        <result property="college"    column="sub_college"    />
-        <result property="major"    column="sub_major"    />
-        <result property="edu"    column="sub_edu"    />
-        <result property="course"    column="sub_course"    />
-        <result property="createBy"    column="sub_create_by"    />
-        <result property="createTime"    column="sub_create_time"    />
-        <result property="updateBy"    column="sub_update_by"    />
-        <result property="updateTime"    column="sub_update_time"    />
+        <result property="id" column="sub_id"/>
+        <result property="studentId" column="sub_student_id"/>
+        <result property="eduPeriod" column="sub_edu_period"/>
+        <result property="college" column="sub_college"/>
+        <result property="major" column="sub_major"/>
+        <result property="edu" column="sub_edu"/>
+        <result property="course" column="sub_course"/>
+        <result property="createBy" column="sub_create_by"/>
+        <result property="createTime" column="sub_create_time"/>
+        <result property="updateBy" column="sub_update_by"/>
+        <result property="updateTime" column="sub_update_time"/>
     </resultMap>
 
     <sql id="selectSysStudentVo">
-        select id, name, birth, age, phone, edu, address, email, major, avatar, class_id, capacity_computer, capacity_language, capacity_major, evaluate_person, evaluate_work, create_by, create_time, update_by, update_time from sys_student
+
+        select s.id,
+               s.name,
+               s.birth,
+               s.age,
+               s.phone,
+               s.edu,
+               s.address,
+               s.email,
+               s.major,
+               s.avatar,
+               s.class_id,
+               s.enhance_flag,
+               s.capacity_level,
+               c.name
+                   as class_name,
+               s.capacity_computer,
+               s.capacity_language,
+               s.capacity_major,
+               s.evaluate_person,
+               s.evaluate_work,
+               s.create_by,
+               s.create_time,
+               s.update_by,
+               s.update_time
+        from sys_student s
+                 left join sys_class c on s.class_id =
+                                          c.id
     </sql>
 
+    <select id="selectSysStudentListAll" parameterType="SysStudent" resultMap="SysStudentResult">
+        <include refid="selectSysStudentVo"></include>
+        where s.del_flag = '0'
+        <if test="classId != null">and s.class_id = #{classId}</if>
+    </select>
+
     <select id="selectSysStudentList" parameterType="SysStudent" resultMap="SysStudentResult">
-        <include refid="selectSysStudentVo"/>
-        where del_flag = '0'
-        <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-        <if test="edu != null  and edu != ''"> and edu = #{edu}</if>
-        <if test="address != null  and address != ''"> and address = #{address}</if>
-        <if test="className != null and className != ''"> and class_id = (select id from sys_class where name = #{className})</if>
+        select s.id, s.name, s.birth, s.age, s.phone, s.edu, s.address, s.email, s.major, s.avatar, s.class_id, c.name
+        as class_name, s.capacity_computer, s.capacity_language, s.capacity_major, s.evaluate_person, s.evaluate_work,
+        s.create_by, s.create_time, s.update_by, s.update_time from sys_student s left join sys_class c on s.class_id =
+        c.id
+        where s.del_flag = '0'
+        <if test="name != null  and name != ''">and s.name like concat('%', #{name}, '%')</if>
+        <if test="edu != null  and edu != ''">and s.edu = #{edu}</if>
+        <if test="address != null  and address != ''">and s.address = #{address}</if>
+        <if test="classId != null">and s.class_id = #{classId}</if>
+        <if test="className != null  and className != ''">and c.name = #{className}</if>
     </select>
 
     <select id="selectSysStudentById" parameterType="Long" resultMap="SysStudentSysEducationResult">
-        select a.id, a.name, a.birth, a.age, a.phone, a.edu, a.address, a.email, a.major, a.avatar, a.class_id, a.capacity_computer, a.capacity_language, a.capacity_major, a.evaluate_person, a.evaluate_work, a.create_by, a.create_time, a.update_by, a.update_time,
- b.id as sub_id, b.student_id as sub_student_id, b.edu_period as sub_edu_period, b.college as sub_college, b.major as sub_major, b.edu as sub_edu, b.course as sub_course, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time
+
+        select a.id,
+               a.name,
+               a.birth,
+               a.age,
+               a.phone,
+               a.edu,
+               a.address,
+               a.email,
+               a.major,
+               a.avatar,
+               a.class_id,
+               a.enhance_flag,
+               a.capacity_level,
+               c.name
+                             as class_name,
+               a.capacity_computer,
+               a.capacity_language,
+               a.capacity_major,
+               a.evaluate_person,
+               a.evaluate_work,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               b.id          as sub_id,
+               b.student_id  as sub_student_id,
+               b.edu_period  as sub_edu_period,
+               b.college     as sub_college,
+               b.major       as sub_major,
+               b.edu         as sub_edu,
+               b.course      as sub_course,
+               b.create_by   as sub_create_by,
+               b.create_time as
+                                sub_create_time,
+               b.update_by   as sub_update_by,
+               b.update_time as sub_update_time
         from sys_student a
-        left join sys_education b on b.student_id = a.id
-        where del_flag = '0' and a.id = #{id}
+                 left join sys_class c on a.class_id = c.id
+                 left join sys_education b on b.student_id = a.id
+        where a.del_flag = '0'
+          and a.id = #{id}
+    </select>
+    <select id="selectSysStudentByClassId" resultMap="ClassIdSyStudent">
+        SELECT SUM(CASE WHEN capacity_level = 3 THEN 1 ELSE 0 END) AS level3,
+               SUM(CASE WHEN capacity_level = 2 THEN 1 ELSE 0 END) AS level2,
+               SUM(CASE WHEN capacity_level = 1 THEN 1 ELSE 0 END) AS level1,
+               SUM(CASE WHEN capacity_level = 0 THEN 1 ELSE 0 END) AS level0,
+               SUM(CASE WHEN enhance_flag = 1 THEN 1 ELSE 0 END)   AS enhanceCount,
+               COUNT(*)                                            as classStuCount
+        FROM sys_student
+        WHERE class_id = #{classId};
+
     </select>
 
     <insert id="insertSysStudent" parameterType="SysStudent" useGeneratedKeys="true" keyProperty="id">
@@ -79,6 +184,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="major != null and major != ''">major,</if>
             <if test="avatar != null and avatar != ''">avatar,</if>
             <if test="classId != null">class_id,</if>
+            <if test="enhanceFlag != null">enhance_flag,</if>
+            <if test="capacityLevel != null">capacity_level,</if>
             <if test="capacityComputer != null">capacity_computer,</if>
             <if test="capacityLanguage != null">capacity_language,</if>
             <if test="capacityMajor != null">capacity_major,</if>
@@ -88,7 +195,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
             <if test="birth != null">#{birth},</if>
@@ -100,6 +207,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="major != null and major != ''">#{major},</if>
             <if test="avatar != null and avatar != ''">#{avatar},</if>
             <if test="classId != null">#{classId},</if>
+            <if test="enhanceFlag != null">#{enhanceFlag},</if>
+            <if test="capacityLevel != null">#{capacityLevel},</if>
             <if test="capacityComputer != null">#{capacityComputer},</if>
             <if test="capacityLanguage != null">#{capacityLanguage},</if>
             <if test="capacityMajor != null">#{capacityMajor},</if>
@@ -109,7 +218,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateSysStudent" parameterType="SysStudent">
@@ -125,6 +234,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="major != null and major != ''">major = #{major},</if>
             <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
             <if test="classId != null">class_id = #{classId},</if>
+            <if test="enhanceFlag != null">enhance_flag = #{enhanceFlag},</if>
+            <if test="capacityLevel != null">capacity_level = #{capacityLevel},</if>
             <if test="capacityComputer != null">capacity_computer = #{capacityComputer},</if>
             <if test="capacityLanguage != null">capacity_language = #{capacityLanguage},</if>
             <if test="capacityMajor != null">capacity_major = #{capacityMajor},</if>
@@ -139,7 +250,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteSysStudentById" parameterType="Long">
-        update sys_student set del_flag = '2' where id = #{id}
+        update sys_student
+        set del_flag = '2'
+        where id = #{id}
     </delete>
 
     <delete id="deleteSysStudentByIds" parameterType="String">
@@ -157,13 +270,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSysEducationByStudentId" parameterType="Long">
-        delete from sys_education where student_id = #{studentId}
+        delete
+        from sys_education
+        where student_id = #{studentId}
     </delete>
 
     <insert id="batchSysEducation">
-        insert into sys_education( id, student_id, edu_period, college, major, edu, course, create_by, create_time, update_by, update_time) values
-		<foreach item="item" index="index" collection="list" separator=",">
-            ( #{item.id}, #{item.studentId}, #{item.eduPeriod}, #{item.college}, #{item.major}, #{item.edu}, #{item.course}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime})
+        insert into sys_education( id, student_id, edu_period, college, major, edu, course, create_by, create_time,
+        update_by, update_time) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.studentId}, #{item.eduPeriod}, #{item.college}, #{item.major}, #{item.edu},
+            #{item.course}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime})
         </foreach>
     </insert>
 </mapper>

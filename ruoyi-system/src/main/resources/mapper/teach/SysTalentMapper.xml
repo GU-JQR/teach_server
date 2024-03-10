@@ -140,8 +140,7 @@
     </update>
 
     <update id="deleteSysTalentById" parameterType="Long">
-        update
-        from sys_talent
+        update sys_talent
         set del_flag='1'
         where id = #{id}
     </update>

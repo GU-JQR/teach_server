@@ -165,12 +165,12 @@ public class SysResourceController extends BaseController {
      **/
     @GetMapping("/count")
     public AjaxResult countByCategoryType(){
-        List<Map<String, Long>> list= sysResourceService.countByCategoryType();
+        long[] list= sysResourceService.countByCategoryType();
         return AjaxResult.success(list);
     }
     @GetMapping("/getUpdateDate")
     public AjaxResult getUpdateDate(){
-        List<Double> updateRate = sysResourceService.getUpdateDate();
+        double[] updateRate = sysResourceService.getUpdateDate();
         return  AjaxResult.success(updateRate);
     }
 }

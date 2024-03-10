@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.teach.mapper.SysClassMapper">
-    
+
     <resultMap type="SysClass" id="SysClassResult">
         <result property="id"    column="id"    />
         <result property="number"    column="number"    />
@@ -26,19 +26,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectSysClassList" parameterType="SysClass" resultMap="SysClassResult">
         <include refid="selectSysClassVo"/>
         where del_flag = '0'
-        <where>  
+        <where>
             <if test="number != null "> and number = #{number}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="startDate != null "> and start_date = #{startDate}</if>
             <if test="endDate != null "> and end_date = #{endDate}</if>
         </where>
     </select>
-    
+
     <select id="selectSysClassById" parameterType="Long" resultMap="SysClassResult">
         <include refid="selectSysClassVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectLastSysClassByNumber" resultMap="SysClassResult">
+        SELECT id
+        FROM sys_class
+        WHERE number &lt; #{number}
+        ORDER BY number DESC
+        LIMIT 1
+    </select>
+    <select id="selectNowClassId" resultMap="SysClassResult">
+        <include refid="selectSysClassVo"/>
+        order by number desc
+        limit 1
+    </select>
+    <select id="selectChartInfoById" resultMap="SysClassResult">
+        <include refid="selectSysClassVo"/>
+        where year = (
+            SELECT year
+            from sys_class
+            where id = #{id}
+            )
+        order by number
+    </select>
+
     <insert id="insertSysClass" parameterType="SysClass" useGeneratedKeys="true" keyProperty="id">
         insert into sys_class
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -100,33 +100,38 @@ public class SysResourceServiceImpl implements ISysResourceService
      **/
 
     @Override
-    public List<Map<String,Long>> countByCategoryType() {
-        return sysResourceMapper.countByCategoryType();
+    public long[] countByCategoryType() {
+        List<Map<String, Long>> list = sysResourceMapper.countByCategoryType();
+        long[] doubles = new long[8];
+        for (Map<String, Long> resourceMap : list) {
+            Long typeId = Long.parseLong(String.valueOf(resourceMap.get("type_id"))); // 使用getOrDefault避免NullPointerException
+            Long allQuantity = resourceMap.getOrDefault("a", 0L); // 避免除以0的情况，默认至少有一个资源}
+            doubles[typeId.intValue()]=allQuantity;
+        }
+        return doubles;
+
     }
 
     @Override
-    public List<Double> getUpdateDate() {
+    public double[] getUpdateDate() {
         // 获取当前日期和时间
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nowMinusOneYear = now.minusYears(1);
         List<Map<String, Long>> list = sysResourceMapper.getUpdateDate(nowMinusOneYear);
-        List< Double> typeIdToUpdateRateList = new ArrayList<>() ;
+        double[] doubles = new double[8];
         for (Map<String, Long> resourceMap : list) {
             Long typeId = Long.parseLong(String.valueOf(resourceMap.get("type_id"))); // 使用getOrDefault避免NullPointerException
             Long thisYearUpdateQuantity = resourceMap.getOrDefault("thisYearUpdateQuantity", 0L);
             Long allQuantity = resourceMap.getOrDefault("allQuantity", 0L); // 避免除以0的情况，默认至少有一个资源
             // 检查是否有今年更新的数量，避免除以0
             if (allQuantity == 0) {
-                typeIdToUpdateRateList.add(0.0);
+                doubles[typeId.intValue()]=0.0;
                 continue;
             }
-
             // 计算更新率，确保至少有一个资源以避免除以0
-            Double updateRate = (double) thisYearUpdateQuantity / allQuantity;
-
-            // 将更新率放入map中
-            typeIdToUpdateRateList.add(updateRate);
+            double updateRate = (double) thisYearUpdateQuantity / allQuantity;
+            doubles[typeId.intValue()]=updateRate;
         }
-        return typeIdToUpdateRateList;
+        return doubles;
     }
 }
