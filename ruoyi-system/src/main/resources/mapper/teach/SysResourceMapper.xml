@@ -43,6 +43,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectSysResourceVo"/>
         where id = #{id} and del_flag = '0'
     </select>
+    <select id="countByCategoryType" resultType="java.util.Map">
+        SELECT type_id, COUNT(*) AS a
+        FROM sys_resource
+        WHERE del_flag = '0'
+        GROUP BY type_id
+        ORDER BY type_id ASC;
+    </select>
+    <select id="getUpdateDate" resultType="java.util.Map">
+        SELECT b.type_id AS type_id,
+               COUNT(*) AS thisYearUpdateQuantity,
+               a.allQuantity
+        FROM sys_resource b
+                 right JOIN
+             (SELECT type_id,
+                     COUNT(*) AS allQuantity
+              FROM sys_resource
+              WHERE del_flag = '0'
+              GROUP BY type_id) a
+             ON
+                 b.type_id = a.type_id
+        WHERE b.update_time &gt;  #{time}
+          AND b.del_flag = '0'
+        GROUP BY a.type_id
+        ORDER BY a.type_id ASC;
+    </select>
 
     <insert id="insertSysResource" parameterType="SysResource" useGeneratedKeys="true" keyProperty="id">
         insert into sys_resource

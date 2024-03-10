@@ -2,8 +2,12 @@ package com.ruoyi.teach.mapper;
 
 
 import com.ruoyi.teach.domain.SysResource;
+import org.springframework.data.redis.connection.RedisServer;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 资源库Mapper接口
@@ -60,4 +64,13 @@ public interface SysResourceMapper
      * @return 结果
      */
     public int deleteSysResourceByIds(Long[] ids);
+
+    /**
+     * @description:根据类型统计资源个数
+     * @param: []
+     * @return: java.util.List<java.util.Map < java.lang.Integer, java.lang.Long>>
+     **/
+    public List<Map<String, Long>> countByCategoryType();
+
+    List<Map<String, Long>>getUpdateDate(LocalDateTime time );
 }

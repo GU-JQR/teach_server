@@ -3,6 +3,7 @@ package com.ruoyi.teach.service;
 import com.ruoyi.teach.domain.SysResource;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -60,4 +61,12 @@ public interface ISysResourceService
      * @return 结果
      */
     public int deleteSysResourceById(Long id);
+
+    /**
+     * @description:
+     * @return: java.util.List<java.lang.Long>
+     **/
+    List<Map<String,Long>> countByCategoryType();
+
+    List<Double> getUpdateDate();
 }

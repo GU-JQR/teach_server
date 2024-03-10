@@ -115,8 +115,10 @@ public class SysClassServiceImpl implements ISysClassService
             }
             map.get(item.getYear()).add(new ClassTreeVO(item.getId(),item.getName()));
         }
+        Long id = 0L;
         for (Integer key : map.keySet()) { //遍历key
-            ClassTreeVO node = new ClassTreeVO(0L,key.toString());
+            id = id - 1;
+            ClassTreeVO node = new ClassTreeVO(id,key.toString());
             node.setChildren(map.get(key));
             top.getChildren().add(node);
         }

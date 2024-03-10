@@ -1,12 +1,12 @@
 package com.ruoyi.web.controller.teach;
-
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Result;
 
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.domain.entity.SysLabel;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.teach.domain.SysResource;
@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -159,5 +158,19 @@ public class SysResourceController extends BaseController {
             log.error("下载文件失败", e);
         }
 
+    }
+    /**
+     * @description:根据类别统计资源个数
+     * @return: com.ruoyi.common.core.domain.AjaxResult
+     **/
+    @GetMapping("/count")
+    public AjaxResult countByCategoryType(){
+        List<Map<String, Long>> list= sysResourceService.countByCategoryType();
+        return AjaxResult.success(list);
+    }
+    @GetMapping("/getUpdateDate")
+    public AjaxResult getUpdateDate(){
+        List<Double> updateRate = sysResourceService.getUpdateDate();
+        return  AjaxResult.success(updateRate);
     }
 }

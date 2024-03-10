@@ -1,6 +1,8 @@
 package com.ruoyi.teach.service.impl;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
+
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.teach.domain.SysResource;
 import com.ruoyi.teach.mapper.SysResourceMapper;
@@ -91,5 +93,40 @@ public class SysResourceServiceImpl implements ISysResourceService
     public int deleteSysResourceById(Long id)
     {
         return sysResourceMapper.deleteSysResourceById(id);
+    }
+    /**
+     * @description:根据类型统计个数
+     * @return: java.util.List<java.util.Map < java.lang.Integer, java.lang.Long>>
+     **/
+
+    @Override
+    public List<Map<String,Long>> countByCategoryType() {
+        return sysResourceMapper.countByCategoryType();
+    }
+
+    @Override
+    public List<Double> getUpdateDate() {
+        // 获取当前日期和时间
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nowMinusOneYear = now.minusYears(1);
+        List<Map<String, Long>> list = sysResourceMapper.getUpdateDate(nowMinusOneYear);
+        List< Double> typeIdToUpdateRateList = new ArrayList<>() ;
+        for (Map<String, Long> resourceMap : list) {
+            Long typeId = Long.parseLong(String.valueOf(resourceMap.get("type_id"))); // 使用getOrDefault避免NullPointerException
+            Long thisYearUpdateQuantity = resourceMap.getOrDefault("thisYearUpdateQuantity", 0L);
+            Long allQuantity = resourceMap.getOrDefault("allQuantity", 0L); // 避免除以0的情况，默认至少有一个资源
+            // 检查是否有今年更新的数量，避免除以0
+            if (allQuantity == 0) {
+                typeIdToUpdateRateList.add(0.0);
+                continue;
+            }
+
+            // 计算更新率，确保至少有一个资源以避免除以0
+            Double updateRate = (double) thisYearUpdateQuantity / allQuantity;
+
+            // 将更新率放入map中
+            typeIdToUpdateRateList.add(updateRate);
+        }
+        return typeIdToUpdateRateList;
     }
 }
