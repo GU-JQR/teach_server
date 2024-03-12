@@ -28,6 +28,8 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="className" column="class_name"/>
+        <result property="number" column="number"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
     <!--优良率映射-->
     <resultMap type="SysStudent" id="ClassIdSyStudent">
@@ -66,7 +68,6 @@
     </resultMap>
 
     <sql id="selectSysStudentVo">
-
         select s.id,
                s.name,
                s.birth,
@@ -90,7 +91,9 @@
                s.create_by,
                s.create_time,
                s.update_by,
-               s.update_time
+               s.update_time,
+               s.number,
+               s.user_id
         from sys_student s
                  left join sys_class c on s.class_id =
                                           c.id
@@ -105,7 +108,7 @@
     <select id="selectSysStudentList" parameterType="SysStudent" resultMap="SysStudentResult">
         select s.id, s.name, s.birth, s.age, s.phone, s.edu, s.address, s.email, s.major, s.avatar, s.class_id, c.name
         as class_name, s.capacity_computer, s.capacity_language, s.capacity_major, s.evaluate_person, s.evaluate_work,
-        s.create_by, s.create_time, s.update_by, s.update_time from sys_student s left join sys_class c on s.class_id =
+        s.create_by, s.create_time, s.update_by, s.update_time, s.number from sys_student s left join sys_class c on s.class_id =
         c.id
         where s.del_flag = '0'
         <if test="name != null  and name != ''">and s.name like concat('%', #{name}, '%')</if>
@@ -116,7 +119,6 @@
     </select>
 
     <select id="selectSysStudentById" parameterType="Long" resultMap="SysStudentSysEducationResult">
-
         select a.id,
                a.name,
                a.birth,
@@ -141,6 +143,8 @@
                a.create_time,
                a.update_by,
                a.update_time,
+               a.number,
+               a.user_id
                b.id          as sub_id,
                b.student_id  as sub_student_id,
                b.edu_period  as sub_edu_period,
@@ -159,6 +163,7 @@
         where a.del_flag = '0'
           and a.id = #{id}
     </select>
+
     <select id="selectSysStudentByClassId" resultMap="ClassIdSyStudent">
         SELECT SUM(CASE WHEN capacity_level = 3 THEN 1 ELSE 0 END) AS level3,
                SUM(CASE WHEN capacity_level = 2 THEN 1 ELSE 0 END) AS level2,
@@ -168,7 +173,16 @@
                COUNT(*)                                            as classStuCount
         FROM sys_student
         WHERE class_id = #{classId};
+    </select>
 
+    <select id="countSysStudentByClassId" parameterType="java.lang.Long">
+        SELECT COUNT(*) FROM sys_student WHERE class_id = #{classId};
+    </select>
+
+    <select id="selectSysStudentByUserId" resultMap="SysStudentResult">
+        <include refid="selectSysStudentVo">
+        </include>
+        WHERE user_id = #{userId};
     </select>
 
     <insert id="insertSysStudent" parameterType="SysStudent" useGeneratedKeys="true" keyProperty="id">
@@ -195,6 +209,8 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="number != null">number,</if>
+            <if test="userId != null">user_id,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
@@ -218,6 +234,8 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="number != null">#{number},</if>
+            <if test="userId != null">#{userId},</if>
         </trim>
     </insert>
 
@@ -245,6 +263,8 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="userId != null">user_id = #{userId},</if>
         </trim>
         where id = #{id}
     </update>

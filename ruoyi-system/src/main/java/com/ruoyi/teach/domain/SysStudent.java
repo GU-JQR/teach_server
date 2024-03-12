@@ -22,6 +22,10 @@ public class SysStudent extends BaseEntity
     /** 学员ID */
     private Long id;
 
+    /** 学号 */
+    @Excel(name = "学号")
+    private Long number;
+
     /** 姓名 */
     @Excel(name = "姓名")
     private String name;
@@ -66,6 +70,8 @@ public class SysStudent extends BaseEntity
     /** 班级名称 */
     private String className;
 
+    private Long userId;
+
     /** 计算机能力 */
     private String capacityComputer;
 
@@ -99,6 +105,15 @@ public class SysStudent extends BaseEntity
     private Integer classStuCount;
     //提升的数量
     private Integer enhanceCount;
+
+
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
+    }
 
     public String getCapacityLevel() {
         return capacityLevel;
@@ -270,6 +285,14 @@ public class SysStudent extends BaseEntity
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setCapacityComputer(String capacityComputer)

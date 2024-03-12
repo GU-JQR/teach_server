@@ -23,12 +23,28 @@ public interface SysStudentMapper
     public SysStudent selectSysStudentById(Long id);
 
     /**
+     * 查询学员信息
+     *
+     * @param userId 学员信息主键
+     * @return 学员信息
+     */
+    public SysStudent selectSysStudentByUserId(Long userId);
+
+    /**
      * 查询学员信息列表
      *
      * @param sysStudent 学员信息
      * @return 学员信息集合
      */
     public List<SysStudent> selectSysStudentList(SysStudent sysStudent);
+
+    /**
+     * 查询班级学员数量
+     *
+     * @param classId
+     * @return 学员数量
+     */
+    public int countSysStudentByClassId(Long classId);
 
     /**
      * 查询全部学员信息列表

@@ -4,7 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.domain.SysUserPost;
+import com.ruoyi.system.domain.SysUserRole;
+import com.ruoyi.system.mapper.SysDeptMapper;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.mapper.SysUserPostMapper;
+import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.teach.domain.SysClass;
 import com.ruoyi.teach.mapper.SysClassMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +43,18 @@ public class SysStudentServiceImpl implements ISysStudentService
     @Autowired
     private SysClassMapper sysClassMapper;
 
+    @Autowired
+    private SysDeptMapper sysDeptMapper;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private SysUserRoleMapper sysUserRoleMapper;
+
+    @Autowired
+    private SysUserPostMapper sysUserPostMapper;
+
     /**
      * 查询学员信息
      *
@@ -44,6 +65,19 @@ public class SysStudentServiceImpl implements ISysStudentService
     public SysStudent selectSysStudentById(Long id)
     {
         return sysStudentMapper.selectSysStudentById(id);
+    }
+
+    /**
+     * 查询学员信息
+     *
+     * @param userId 学员信息主键
+     * @return 学员信息
+     */
+    @Override
+    public SysStudent selectSysStudentByUserId(Long userId)
+    {
+        SysStudent student = sysStudentMapper.selectSysStudentByUserId(userId);
+        return student;
     }
 
     /**
@@ -75,13 +109,40 @@ public class SysStudentServiceImpl implements ISysStudentService
      * @param sysStudent 学员信息
      * @return 结果
      */
-    @Transactional
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertSysStudent(SysStudent sysStudent)
     {
+        SysClass sysClass = sysClassMapper.selectSysClassById(sysStudent.getClassId());
         sysStudent.setCreateTime(DateUtils.getNowDate());
+        sysStudent.setNumber(sysClass.getNumber()*1000L+sysStudentMapper.countSysStudentByClassId(sysStudent.getClassId())+1);
         int rows = sysStudentMapper.insertSysStudent(sysStudent);
         insertSysEducation(sysStudent);
+        //新建用户
+        SysDept dept = sysDeptMapper.selectDeptById(sysClass.getDeptId());
+        SysUser user = new SysUser();
+        user.setDeptId(dept.getDeptId());
+        user.setUserName(sysStudent.getNumber().toString());
+        user.setNickName(sysStudent.getName());
+        user.setPhonenumber(sysStudent.getPhone());
+        user.setEmail(sysStudent.getEmail());
+        user.setAvatar(sysStudent.getAvatar());
+        user.setPassword(SecurityUtils.encryptPassword(user.getPhonenumber()));
+        sysUserMapper.insertUser(user);
+        //关联学生角色
+        List<SysUserRole> userRoles = new ArrayList<>();
+        SysUserRole userRole = new SysUserRole();
+        userRole.setRoleId(2L);
+        userRole.setUserId(user.getUserId());
+        userRoles.add(userRole);
+        sysUserRoleMapper.batchUserRole(userRoles);
+        //关联学员岗位
+        List<SysUserPost> userPosts = new ArrayList<>();
+        SysUserPost userPost = new SysUserPost();
+        userPost.setPostId(3L);
+        userPost.setUserId(user.getUserId());
+        userPosts.add(userPost);
+        sysUserPostMapper.batchUserPost(userPosts);
         return rows;
     }
 

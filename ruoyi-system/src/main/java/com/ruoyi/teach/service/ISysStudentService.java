@@ -22,6 +22,14 @@ public interface ISysStudentService
     public SysStudent selectSysStudentById(Long id);
 
     /**
+     * 查询学员信息
+     *
+     * @param userId 学员信息主键
+     * @return 学员信息
+     */
+    public SysStudent selectSysStudentByUserId(Long userId);
+
+    /**
      * 查询学员信息列表
      *
      * @param sysStudent 学员信息

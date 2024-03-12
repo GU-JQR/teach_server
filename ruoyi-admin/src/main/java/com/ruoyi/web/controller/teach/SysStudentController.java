@@ -84,6 +84,16 @@ public class SysStudentController extends BaseController
     }
 
     /**
+     * 获取学员信息详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('teach:student:query')")
+    @GetMapping(value = "/getByUserId")
+    public AjaxResult getByUserId()
+    {
+        return success(sysStudentService.selectSysStudentByUserId(getUserId()));
+    }
+
+    /**
      * 新增学员信息
      */
     @PreAuthorize("@ss.hasPermi('teach:student:add')")

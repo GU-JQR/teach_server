@@ -1,11 +1,14 @@
 package com.ruoyi.teach.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.mapper.SysDeptMapper;
 import com.ruoyi.teach.domain.SysStudent;
 import com.ruoyi.teach.domain.vo.ClassTreeVO;
 import com.ruoyi.teach.mapper.SysStudentMapper;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.teach.mapper.SysClassMapper;
 import com.ruoyi.teach.domain.SysClass;
 import com.ruoyi.teach.service.ISysClassService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 学员分期Service业务层处理
@@ -29,6 +33,9 @@ public class SysClassServiceImpl implements ISysClassService
 
     @Autowired
     private SysStudentMapper sysStudentMapper;
+
+    @Autowired
+    private SysDeptMapper sysDeptMapper;
 
     /**
      * 查询学员分期
@@ -61,11 +68,24 @@ public class SysClassServiceImpl implements ISysClassService
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertSysClass(SysClass sysClass)
     {
         sysClass.setCreateTime(DateUtils.getNowDate());
-        sysClass.setYear(sysClass.getNumber()/10000);
-        return sysClassMapper.insertSysClass(sysClass);
+        LocalDateTime now = LocalDateTime.now();
+        sysClass.setYear(now.getYear());
+        sysClass.setNumber(now.getYear()*10000+now.getMonthValue()*100+now.getDayOfMonth());
+        //新建部门
+        SysDept dept = new SysDept();
+        dept.setParentId(102L);
+        dept.setAncestors("0,100,102");
+        dept.setDeptName(sysClass.getName());
+        int result = sysDeptMapper.insertDept(dept);
+        if(result>0){
+            sysClass.setDeptId(dept.getDeptId());
+            result = sysClassMapper.insertSysClass(sysClass);;
+        }
+        return result;
     }
 
     /**

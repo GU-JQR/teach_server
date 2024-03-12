@@ -47,6 +47,8 @@ public class SysClass extends BaseEntity
 
     private Integer year;
 
+    private Long deptId;
+
     public Integer getYear() {
         return year;
     }
@@ -64,12 +66,12 @@ public class SysClass extends BaseEntity
     {
         return id;
     }
-    public void setNumber(Integer number) 
+    public void setNumber(Integer number)
     {
         this.number = number;
     }
 
-    public Integer getNumber() 
+    public Integer getNumber()
     {
         return number;
     }
@@ -117,6 +119,14 @@ public class SysClass extends BaseEntity
     public String getDelFlag() 
     {
         return delFlag;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 
     @Override
