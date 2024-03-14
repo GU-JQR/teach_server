@@ -19,6 +19,7 @@ import com.ruoyi.teach.domain.SysClass;
 import com.ruoyi.teach.service.ISysClassService;
 import org.springframework.transaction.annotation.Transactional;
 
+
 /**
  * 学员分期Service业务层处理
  *
@@ -166,7 +167,6 @@ public class SysClassServiceImpl implements ISysClassService
     public AjaxResult selectChartInfoById(Long id) {
         List<SysClass> sysClassList= sysClassMapper.selectChartInfoById(id);
         List<Long> result = sysClassList.stream().map(SysClass::getId).collect(Collectors.toList());
-        List<Map> resultList = new LinkedList<>();
         Map<String, List> map = new HashMap<>();
         List<String> listName = new ArrayList<>();
         List<Integer> listCount = new ArrayList<>();
@@ -174,14 +174,19 @@ public class SysClassServiceImpl implements ISysClassService
         for(int i=0;i<result.size();i++){
             listName.add((i+1)+"期");
         }
+        int num=0;
         for (Long item:result){
+            num++;
             SysStudent sysStudent = sysStudentMapper.selectSysStudentByClassId(item);
+            if(sysStudent.isEmpty()){
+                return AjaxResult.error("第"+num+"期目前没有学员请前往后台添加");
+            }
             listCount.add(sysStudent.getEnhanceCount());
             listPer.add(sysStudent.getEnhanceCount()*100/sysStudent.getClassStuCount());
         }
         map.put("xData",listName);
         map.put("yDataLeft",listCount);
         map.put("yDataRight",listPer);
-       return AjaxResult.success(map);
+        return AjaxResult.success(map);
     }
 }

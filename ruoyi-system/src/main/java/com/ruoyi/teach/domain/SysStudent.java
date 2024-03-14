@@ -23,7 +23,7 @@ public class SysStudent extends BaseEntity
     private Long id;
 
     /** 学号 */
-    @Excel(name = "学号")
+//    @Excel(name = "学号")
     private Long number;
 
     /** 姓名 */
@@ -32,7 +32,7 @@ public class SysStudent extends BaseEntity
 
     /** 出生年月 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "出生年月", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "出生年月:yyyy-MM-dd", width = 30, dateFormat = "yyyy-MM-dd")
     private Date birth;
 
     /** 年龄 */
@@ -43,28 +43,35 @@ public class SysStudent extends BaseEntity
     @Excel(name = "电话")
     private String phone;
 
-    /** 学历 */
-    @Excel(name = "学历")
-    private String edu;
-
-    /** 地址 */
-    @Excel(name = "地址")
-    private String address;
 
     /** 邮箱 */
     @Excel(name = "邮箱")
     private String email;
 
+    /** 地址 */
+    @Excel(name = "地址")
+    private String address;
+
     /** 专业 */
     @Excel(name = "专业")
     private String major;
+    /** 学历 */
+    @Excel(name = "学历")
+    private String edu;
+    //提高标志
+    @Excel(name = "提高1 不提高0")
+    private String enhanceFlag;
+    //综合能力
+    @Excel(name = "优3 良2 及格1 不及格0")
+    private String capacityLevel;
 
     /** 头像 */
-    @Excel(name = "头像")
+//    @Excel(name = "头像")
     private String avatar;
 
     /** 班级 */
-    @Excel(name = "班级")
+    //前端传入
+//    @Excel(name = "班级")
     private Long classId;
 
     /** 班级名称 */
@@ -73,26 +80,55 @@ public class SysStudent extends BaseEntity
     private Long userId;
 
     /** 计算机能力 */
+    @Excel(name = "计算机能力")
     private String capacityComputer;
 
     /** 语言能力 */
+    @Excel(name = "语言能力")
     private String capacityLanguage;
 
     /** 专业能力 */
+    @Excel(name = "专业能力")
     private String capacityMajor;
 
     /** 个人评价 */
+    @Excel(name = "个人评价")
     private String evaluatePerson;
 
     /** 工作态度 */
+    @Excel(name = "工作态度")
     private String evaluateWork;
 
     /** 教育经历信息信息 */
     private List<SysEducation> sysEducationList;
-    //提高标志
-    private String enhanceFlag;
-    //综合能力
-    private String capacityLevel;
+
+    //用来取数据时候进行导入
+    @Excel(name = "教育经历")
+    private Long eduCount;
+
+    //=========教育经历===================
+    /** 上学时间 */
+    @Excel(name = "上学时间")
+    private String eduPeriod;
+
+    /** 学校（院） */
+    @Excel(name = "学校")
+    private String college;
+
+    /** 专业 */
+    @Excel(name = "当时的专业")
+    private String majorLast;
+
+    /** 学历 */
+    @Excel(name = "当时的学历")
+    private String eduLast;
+
+    /** 主修课程 */
+    @Excel(name = "主修课程")
+    private String course;
+    //=========教育经历===================
+
+    //========成绩统计===================
     //优的数量
     private Integer level3;
     //良的数量
@@ -105,7 +141,56 @@ public class SysStudent extends BaseEntity
     private Integer classStuCount;
     //提升的数量
     private Integer enhanceCount;
+    //========成绩统计==================
 
+
+    public Long getEduCount() {
+        return eduCount;
+    }
+
+    public void setEduCount(Long eduCount) {
+        this.eduCount = eduCount;
+    }
+
+    public String getEduPeriod() {
+        return eduPeriod;
+    }
+
+    public void setEduPeriod(String eduPeriod) {
+        this.eduPeriod = eduPeriod;
+    }
+
+    public String getCollege() {
+        return college;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
+    }
+
+    public String getMajorLast() {
+        return majorLast;
+    }
+
+    public void setMajorLast(String majorLast) {
+        this.majorLast = majorLast;
+    }
+
+    public String getEduLast() {
+        return eduLast;
+    }
+
+    public void setEduLast(String eduLast) {
+        this.eduLast = eduLast;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
 
     public Long getNumber() {
         return number;
@@ -350,6 +435,18 @@ public class SysStudent extends BaseEntity
     {
         this.sysEducationList = sysEducationList;
     }
+
+
+    public boolean isEmpty(){
+        return
+                level3 == null &&
+                level2 == null &&
+                level1 == null &&
+                level0 == null &&
+                enhanceCount == null;
+    }
+
+
 
     @Override
     public String toString() {

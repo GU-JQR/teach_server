@@ -113,6 +113,7 @@ public interface SysStudentMapper
 
     //查询classId学生的level和晋升
     SysStudent selectSysStudentByClassId(Long classId);
-    //根据当前classId查询上一期的学生classId
-    SysClass selectLastSysStudentByClassId(Long classId);
+
+    //根据学号查询用户
+    SysStudent selectSysStudentByNumber(SysStudent sysStudent);
 }

@@ -116,8 +116,9 @@ public class SysResourceServiceImpl implements ISysResourceService
     public double[] getUpdateDate() {
         // 获取当前日期和时间
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime nowMinusOneYear = now.minusYears(1);
-        List<Map<String, Long>> list = sysResourceMapper.getUpdateDate(nowMinusOneYear);
+        int year = now.getYear();
+        LocalDateTime localDateTime = LocalDateTime.of(year, 1, 1, 0, 0, 0);
+        List<Map<String, Long>> list = sysResourceMapper.getUpdateDate(localDateTime);
         double[] doubles = new double[8];
         for (Map<String, Long> resourceMap : list) {
             Long typeId = Long.parseLong(String.valueOf(resourceMap.get("type_id"))); // 使用getOrDefault避免NullPointerException

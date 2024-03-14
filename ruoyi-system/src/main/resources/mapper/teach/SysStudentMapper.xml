@@ -144,7 +144,7 @@
                a.update_by,
                a.update_time,
                a.number,
-               a.user_id
+               a.user_id,
                b.id          as sub_id,
                b.student_id  as sub_student_id,
                b.edu_period  as sub_edu_period,
@@ -173,6 +173,11 @@
                COUNT(*)                                            as classStuCount
         FROM sys_student
         WHERE class_id = #{classId};
+    </select>
+
+    <select id="selectSysStudentByNumber" resultMap="SysStudentResult">
+        select * from sys_student
+        where del_flag = '0' and phone =  #{phone}
     </select>
 
     <select id="countSysStudentByClassId" parameterType="java.lang.Long">

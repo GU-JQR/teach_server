@@ -79,4 +79,7 @@ public interface ISysStudentService
 
     //查询上一期和这一期的学生数据
     AjaxResult selectSysStudentByClassId(Long classId);
+
+    //批量增加学生
+    String importStudent(List<SysStudent> studentList, Long classId);
 }
