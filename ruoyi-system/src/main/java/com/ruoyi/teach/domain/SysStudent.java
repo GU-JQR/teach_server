@@ -27,7 +27,7 @@ public class SysStudent extends BaseEntity
     private Long number;
 
     /** 姓名 */
-    @Excel(name = "姓名")
+    @Excel(prompt = "姓名请务必填写",name = "姓名")
     private String name;
 
     /** 出生年月 */
@@ -40,10 +40,8 @@ public class SysStudent extends BaseEntity
     private Integer age;
 
     /** 电话 */
-    @Excel(name = "电话")
+    @Excel(prompt = "电话请反复确认对错", name = "电话")
     private String phone;
-
-
     /** 邮箱 */
     @Excel(name = "邮箱")
     private String email;
@@ -59,10 +57,10 @@ public class SysStudent extends BaseEntity
     @Excel(name = "学历")
     private String edu;
     //提高标志
-    @Excel(name = "提高1 不提高0")
+//    @Excel(name = "提高1 不提高0")
     private String enhanceFlag;
     //综合能力
-    @Excel(name = "优3 良2 及格1 不及格0")
+//    @Excel(name = "优3 良2 及格1 不及格0")
     private String capacityLevel;
 
     /** 头像 */
@@ -112,7 +110,7 @@ public class SysStudent extends BaseEntity
     private String eduPeriod;
 
     /** 学校（院） */
-    @Excel(name = "学校")
+    @Excel(prompt = "如果有教育经历这个必填",name = "学校")
     private String college;
 
     /** 专业 */
@@ -126,6 +124,7 @@ public class SysStudent extends BaseEntity
     /** 主修课程 */
     @Excel(name = "主修课程")
     private String course;
+
     //=========教育经历===================
 
     //========成绩统计===================

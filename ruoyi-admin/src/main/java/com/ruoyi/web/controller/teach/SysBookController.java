@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.teach;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.ip.IpUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +46,12 @@ public class SysBookController extends BaseController
     {
         startPage();
         List<SysBook> list = sysBookService.selectSysBookList(sysBook);
+        if(StringUtils.isNotNull(list)){
+            for (SysBook item:list) {
+                item.setCover("http://"+ IpUtils.getHostIp() + ":8080" + item.getCover());
+                item.setUrl("http://"+ IpUtils.getHostIp() + ":8080" + item.getUrl());
+            }
+        }
         return getDataTable(list);
     }
 

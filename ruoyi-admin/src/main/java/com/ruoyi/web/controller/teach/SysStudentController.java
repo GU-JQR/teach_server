@@ -138,6 +138,7 @@ public class SysStudentController extends BaseController
     {
         return success(sysStudentService.selectSysStudentByClassId(classId));
     }
+
     //查询最新一期的学员ClassId
     @PreAuthorize("@ss.hasPermi('teach:student:query')")
     @GetMapping(value = "/getNowClass")
@@ -145,6 +146,7 @@ public class SysStudentController extends BaseController
     {
         return success(sysClassService.selectNowClassId().getId());
     }
+
     //查找表信息
     @PreAuthorize("@ss.hasPermi('teach:student:query')")
     @GetMapping(value = "/getChartInfo/{id}")
@@ -153,7 +155,7 @@ public class SysStudentController extends BaseController
         return sysClassService.selectChartInfoById(id);
     }
 
-//    批量导入
+    //批量导入
     @PreAuthorize("@ss.hasPermi('teach:student:import')")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file,Long classId) throws Exception
@@ -171,7 +173,5 @@ public class SysStudentController extends BaseController
         ExcelUtil<SysStudent> util = new ExcelUtil<>(SysStudent.class);
         util.importTemplateExcel(response, "用户数据");
     }
-
-
 
 }

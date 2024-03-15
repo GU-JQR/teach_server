@@ -73,8 +73,7 @@ public class SysStudentServiceImpl implements ISysStudentService {
      * @return 学员信息
      */
     @Override
-    public SysStudent selectSysStudentByUserId(Long userId)
-    {
+    public SysStudent selectSysStudentByUserId(Long userId) {
         SysStudent student = sysStudentMapper.selectSysStudentByUserId(userId);
         return student;
     }
@@ -199,7 +198,7 @@ public class SysStudentServiceImpl implements ISysStudentService {
         //根据classId查找number
         SysClass sysClass = sysClassMapper.selectSysClassById(classId);
         SysClass sysClassLast = sysClassMapper.selectLastSysClassByNumber(Long.valueOf(sysClass.getNumber()));
-        if (null == sysClassLast ) {
+        if (null == sysClassLast) {
             ajax.put("lastClass", null);
             return ajax;
         }
@@ -247,15 +246,14 @@ public class SysStudentServiceImpl implements ISysStudentService {
     /**
      * 批量导入
      *
-     * @param studentList   读取的excel数据 还没有进行处 理
-     * @param classId       前端传递过来的classId
+     * @param studentList 读取的excel数据 还没有进行处 理
+     * @param classId     前端传递过来的classId
      * @return
      */
     @Override
     public String importStudent(List<SysStudent> studentList, Long classId) {
 
-        if (StringUtils.isNull(studentList) || studentList.size() == 0)
-        {
+        if (StringUtils.isNull(studentList) || studentList.size() == 0) {
             throw new ServiceException("导入用户数据不能为空！");
         }
         /**
@@ -265,59 +263,56 @@ public class SysStudentServiceImpl implements ISysStudentService {
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        List<SysStudent> list = stuHandler(studentList,classId);
-        for(SysStudent item : list) {
+        List<SysStudent> list = stuHandler(studentList, classId);
+        for (SysStudent item : list) {
             try {
                 //验证是否存在这个用户
                 SysStudent u = sysStudentMapper.selectSysStudentByNumber(item);
-                if(u != null) {
+                if (u == null) {
                     this.insertSysStudent(item);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、账号 " + item.getNumber() + " 导入成功");
-                }else  {
+                } else {
                     failureNum++;
                     failureMsg.append("<br/>" + failureNum + "手机号 " + item.getPhone() + " 已存在");
 
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、账号 " +  item.getNumber()  + " 导入失败：";
+                String msg = "<br/>" + failureNum + "、账号 " + item.getNumber() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
             }
         }
-        if (failureNum > 0)
-        {
+        if (failureNum > 0) {
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确或者已存在，错误如下：");
             throw new ServiceException(failureMsg.toString());
-        }
-        else
-        {
+        } else {
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
 
     }
 
-    private List<SysStudent> stuHandler(List<SysStudent> stuList,Long classId) {
+    private List<SysStudent> stuHandler(List<SysStudent> stuList, Long classId) {
         List<SysStudent> result = new ArrayList<>();
         List<SysEducation> eduList = new LinkedList<>();
         boolean isFirst = false;
         for (SysStudent item : stuList) {
-            if(!StringUtils.isEmpty(item.getName())){//判断是否是新学员 true：是新学员
-                if(isFirst){ //不是第一次进入 将上一个处理一下
+            if (!StringUtils.isEmpty(item.getName())) {//判断是否是新学员 true：是新学员
+                if (isFirst) { //不是第一次进入 将上一个处理一下
                     SysStudent sysStudent = result.get(result.size() - 1);
-                    result.remove(result.size()-1);
-                    if(!CollectionUtils.isEmpty(eduList)){
+                    result.remove(result.size() - 1);
+                    if (!CollectionUtils.isEmpty(eduList)) {
                         sysStudent.setSysEducationList(eduList);
                     }
                     result.add(sysStudent);
                 }
                 isFirst = true;
-                eduList =  new ArrayList<>();
-                result.add(convertInfo(item,classId));
+                eduList = new ArrayList<>();
+                result.add(convertInfo(item, classId));
             }
             SysEducation sysEducation = new SysEducation();
-            if(item.getEduCount() != 0L) {
+            if (!StringUtils.isEmpty(item.getCollege())) { //通过教育经历中的学校来判断是否有教育经历
                 sysEducation.setMajor(item.getMajorLast());
                 sysEducation.setCourse(item.getCourse());
                 sysEducation.setCollege(item.getCollege());
@@ -327,15 +322,16 @@ public class SysStudentServiceImpl implements ISysStudentService {
             }
         }
         //处理最后一个学员 是否需要加入教育信息
-        if(!CollectionUtils.isEmpty(eduList)){
+        if (!CollectionUtils.isEmpty(eduList)) {
             SysStudent sysStudent = result.get(result.size() - 1);
+            result.remove(result.size() - 1); //取出来处理然后删除再次插入
             sysStudent.setSysEducationList(eduList);
             result.add(sysStudent);
         }
         return result;
     }
 
-    private SysStudent convertInfo( SysStudent item,Long classId) {
+    private SysStudent convertInfo(SysStudent item, Long classId) {
         SysStudent sysStudent = new SysStudent();
         sysStudent.setClassId(classId);
         sysStudent.setNumber(item.getNumber());
