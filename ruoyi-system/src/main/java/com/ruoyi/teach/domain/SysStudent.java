@@ -24,7 +24,7 @@ public class SysStudent extends BaseEntity
 
     /** 学号 */
 //    @Excel(name = "学号")
-    private Long number;
+    private String number;
 
     /** 姓名 */
     @Excel(prompt = "姓名请务必填写",name = "姓名")
@@ -97,6 +97,15 @@ public class SysStudent extends BaseEntity
     @Excel(name = "工作态度")
     private String evaluateWork;
 
+    //单位
+    @Excel(name = "工作单位")
+    private String unit;
+
+    //政治面貌
+    @Excel(name = "政治面貌")
+    private String politcal;
+
+
     /** 教育经历信息信息 */
     private List<SysEducation> sysEducationList;
 
@@ -142,6 +151,22 @@ public class SysStudent extends BaseEntity
     private Integer enhanceCount;
     //========成绩统计==================
 
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getPolitcal() {
+        return politcal;
+    }
+
+    public void setPolitcal(String politcal) {
+        this.politcal = politcal;
+    }
 
     public Long getEduCount() {
         return eduCount;
@@ -191,11 +216,11 @@ public class SysStudent extends BaseEntity
         this.course = course;
     }
 
-    public Long getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(Long number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

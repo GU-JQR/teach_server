@@ -48,6 +48,13 @@ public interface ISysClassService
     public int updateSysClass(SysClass sysClass);
 
     /**
+     * 根据期数deptId注销学员
+     * @param sysClass
+     * @return
+     */
+    public int cancelStudentByDeptId(SysClass sysClass);
+
+    /**
      * 批量删除学员分期
      *
      * @param ids 需要删除的学员分期主键集合

@@ -124,4 +124,13 @@ public interface SysUserMapper
      * @return 结果
      */
     public SysUser checkEmailUnique(String email);
+
+    /**
+     * 修改学生头像
+     *
+     * @param userId 用户ID
+     * @param avatar 头像地址
+     * @return 结果
+     */
+    public int updateStudentAvatarByUserId(@Param("userId") Long userId,@Param("avatar") String avatar);
 }

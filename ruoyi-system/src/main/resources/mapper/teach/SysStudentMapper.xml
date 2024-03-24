@@ -16,6 +16,8 @@
         <result property="major" column="major"/>
         <result property="avatar" column="avatar"/>
         <result property="classId" column="class_id"/>
+        <result property="unit" column="unit"/>
+        <result property="politcal" column="politcal"/>
         <result property="enhanceFlag" column="enhance_flag"/>
         <result property="capacityLevel" column="capacity_level"/>
         <result property="capacityComputer" column="capacity_computer"/>
@@ -81,6 +83,8 @@
                s.class_id,
                s.enhance_flag,
                s.capacity_level,
+               s.unit,
+               s.politcal,
                c.name
                    as class_name,
                s.capacity_computer,
@@ -106,7 +110,8 @@
     </select>
 
     <select id="selectSysStudentList" parameterType="SysStudent" resultMap="SysStudentResult">
-        select s.id, s.name, s.birth, s.age, s.phone, s.edu, s.address, s.email, s.major, s.avatar, s.class_id, c.name
+        select s.id, s.name, s.birth, s.age, s.phone, s.edu, s.address, s.email, s.major, s.avatar, s.class_id, s.unit,
+        s.politcal, c.name
         as class_name, s.capacity_computer, s.capacity_language, s.capacity_major, s.evaluate_person, s.evaluate_work,
         s.create_by, s.create_time, s.update_by, s.update_time, s.number from sys_student s left join sys_class c on s.class_id =
         c.id
@@ -132,6 +137,8 @@
                a.class_id,
                a.enhance_flag,
                a.capacity_level,
+               a.unit,
+               a.politcal,
                c.name
                              as class_name,
                a.capacity_computer,
@@ -172,7 +179,7 @@
                SUM(CASE WHEN enhance_flag = 1 THEN 1 ELSE 0 END)   AS enhanceCount,
                COUNT(*)                                            as classStuCount
         FROM sys_student
-        WHERE class_id = #{classId};
+        WHERE class_id = #{classId} and del_flag = '0';
     </select>
 
     <select id="selectSysStudentByNumber" resultMap="SysStudentResult">
@@ -203,6 +210,8 @@
             <if test="major != null and major != ''">major,</if>
             <if test="avatar != null and avatar != ''">avatar,</if>
             <if test="classId != null">class_id,</if>
+            <if test="unit != null and unit !='' ">unit,</if>
+            <if test="politcal != null and politcal != ''">politcal,</if>
             <if test="enhanceFlag != null">enhance_flag,</if>
             <if test="capacityLevel != null">capacity_level,</if>
             <if test="capacityComputer != null">capacity_computer,</if>
@@ -228,6 +237,8 @@
             <if test="major != null and major != ''">#{major},</if>
             <if test="avatar != null and avatar != ''">#{avatar},</if>
             <if test="classId != null">#{classId},</if>
+            <if test="unit != null and unit != '' ">#{unit},</if>
+            <if test="politcal != null and politcal != ''">#{politcal},</if>
             <if test="enhanceFlag != null">#{enhanceFlag},</if>
             <if test="capacityLevel != null">#{capacityLevel},</if>
             <if test="capacityComputer != null">#{capacityComputer},</if>
@@ -257,6 +268,8 @@
             <if test="major != null and major != ''">major = #{major},</if>
             <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
             <if test="classId != null">class_id = #{classId},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="politcal != null">politcal = #{politcal},</if>
             <if test="enhanceFlag != null">enhance_flag = #{enhanceFlag},</if>
             <if test="capacityLevel != null">capacity_level = #{capacityLevel},</if>
             <if test="capacityComputer != null">capacity_computer = #{capacityComputer},</if>

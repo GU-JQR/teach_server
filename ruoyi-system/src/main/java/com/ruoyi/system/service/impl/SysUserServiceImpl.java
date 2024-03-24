@@ -340,14 +340,20 @@ public class SysUserServiceImpl implements ISysUserService
     /**
      * 修改用户头像
      * 
-     * @param userName 用户名
+     * @param user 用户名
      * @param avatar 头像地址
      * @return 结果
      */
     @Override
-    public boolean updateUserAvatar(String userName, String avatar)
+    public boolean updateUserAvatar(SysUser user, String avatar)
     {
-        return userMapper.updateUserAvatar(userName, avatar) > 0;
+        boolean flag = userMapper.updateUserAvatar(user.getUserName(), avatar) > 0;
+        if(flag){
+            //如果是学生，则同步更新学生简历照片
+            userMapper.updateStudentAvatarByUserId(user.getUserId(),avatar);
+        }
+
+        return flag;
     }
 
     /**

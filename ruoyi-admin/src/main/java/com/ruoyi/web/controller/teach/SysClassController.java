@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 学员分期Controller
- * 
+ *
  * @author sqc
  * @date 2024-03-05
  */
@@ -119,5 +119,14 @@ public class SysClassController extends BaseController
     @GetMapping("/classTree")
     public AjaxResult classTree(SysClass sysClass) {
         return success(sysClassService.selectClassTreeList(sysClass));
+    }
+
+    /**
+     * 注销学员
+     */
+    @PreAuthorize("@ss.hasPermi('teach:class:cancel')")
+    @PostMapping("/cancelStu")
+    public AjaxResult cancelStu(@RequestBody SysClass sysClass) {
+        return success(sysClassService.cancelStudentByDeptId(sysClass));
     }
 }

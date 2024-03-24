@@ -44,6 +44,13 @@ public interface SysClassMapper
     public int updateSysClass(SysClass sysClass);
 
     /**
+     * 根据期数deptId注销学员
+     * @param deptId
+     * @return
+     */
+    public int cancelStudentByDeptId(Long deptId);
+
+    /**
      * 删除学员分期
      *
      * @param id 学员分期主键
@@ -59,10 +66,12 @@ public interface SysClassMapper
      */
     public int deleteSysClassByIds(Long[] ids);
     //查询上一期的id
-    SysClass selectLastSysClassByNumber(Long number);
+    public SysClass selectLastSysClassByNumber(Long number);
 
     //查询最新的id
-    SysClass selectNowClassId();
+    public SysClass selectNowClassId();
 
-    List<SysClass> selectChartInfoById(Long id);
+    public List<SysClass> selectChartInfoById(Long id);
+
+    public int countSysClassByYear(Integer year);
 }

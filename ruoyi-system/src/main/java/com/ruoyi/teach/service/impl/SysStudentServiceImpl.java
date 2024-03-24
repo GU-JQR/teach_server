@@ -111,9 +111,7 @@ public class SysStudentServiceImpl implements ISysStudentService {
     public int insertSysStudent(SysStudent sysStudent) {
         SysClass sysClass = sysClassMapper.selectSysClassById(sysStudent.getClassId());
         sysStudent.setCreateTime(DateUtils.getNowDate());
-        sysStudent.setNumber(sysClass.getNumber() * 1000L + sysStudentMapper.countSysStudentByClassId(sysStudent.getClassId()) + 1);
-        int rows = sysStudentMapper.insertSysStudent(sysStudent);
-        insertSysEducation(sysStudent);
+        sysStudent.setNumber(sysClass.getNumber() + String.format("%03d", sysStudentMapper.countSysStudentByClassId(sysStudent.getClassId()) + 1));
         //新建用户
         SysDept dept = sysDeptMapper.selectDeptById(sysClass.getDeptId());
         SysUser user = new SysUser();
@@ -125,6 +123,9 @@ public class SysStudentServiceImpl implements ISysStudentService {
         user.setAvatar(sysStudent.getAvatar());
         user.setPassword(SecurityUtils.encryptPassword(user.getPhonenumber()));
         sysUserMapper.insertUser(user);
+        sysStudent.setUserId(user.getUserId());
+        int rows = sysStudentMapper.insertSysStudent(sysStudent);
+        insertSysEducation(sysStudent);
         //关联学生角色
         List<SysUserRole> userRoles = new ArrayList<>();
         SysUserRole userRole = new SysUserRole();
@@ -275,7 +276,6 @@ public class SysStudentServiceImpl implements ISysStudentService {
                 } else {
                     failureNum++;
                     failureMsg.append("<br/>" + failureNum + "手机号 " + item.getPhone() + " 已存在");
-
                 }
             } catch (Exception e) {
                 failureNum++;
@@ -284,7 +284,7 @@ public class SysStudentServiceImpl implements ISysStudentService {
             }
         }
         if (failureNum > 0) {
-            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确或者已存在，错误如下：");
+            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确或者已存在");
             throw new ServiceException(failureMsg.toString());
         } else {
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
@@ -351,6 +351,8 @@ public class SysStudentServiceImpl implements ISysStudentService {
         sysStudent.setCapacityMajor(item.getCapacityMajor());
         sysStudent.setEvaluatePerson(item.getEvaluatePerson());
         sysStudent.setEvaluateWork(item.getEvaluateWork());
+        sysStudent.setUnit(item.getUnit());
+        sysStudent.setPolitcal(item.getPolitcal());
         return sysStudent;
     }
 

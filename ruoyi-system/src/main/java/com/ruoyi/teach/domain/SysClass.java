@@ -22,11 +22,15 @@ public class SysClass extends BaseEntity
 
     /** 编号 */
     @Excel(name = "编号")
-    private Integer number;
+    private String number;
 
     /** 名称 */
     @Excel(name = "名称")
     private String name;
+
+    /** 队伍分类 */
+    @Excel(name = "队伍分类")
+    private String team;
 
     /** 开始日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -49,6 +53,34 @@ public class SysClass extends BaseEntity
 
     private Long deptId;
 
+    private String evaluateStatus;
+
+    private String finish;
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
+    public String getEvaluateStatus() {
+        return evaluateStatus;
+    }
+
+    public void setEvaluateStatus(String evaluateStatus) {
+        this.evaluateStatus = evaluateStatus;
+    }
+
+    public String getFinish() {
+        return finish;
+    }
+
+    public void setFinish(String finish) {
+        this.finish = finish;
+    }
+
     public Integer getYear() {
         return year;
     }
@@ -66,12 +98,12 @@ public class SysClass extends BaseEntity
     {
         return id;
     }
-    public void setNumber(Integer number)
+    public void setNumber(String number)
     {
         this.number = number;
     }
 
-    public Integer getNumber()
+    public String getNumber()
     {
         return number;
     }

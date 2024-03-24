@@ -26,7 +26,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 书籍信息Controller
- * 
+ *
  * @author sqc
  * @date 2024-03-04
  */
@@ -46,12 +46,6 @@ public class SysBookController extends BaseController
     {
         startPage();
         List<SysBook> list = sysBookService.selectSysBookList(sysBook);
-        if(StringUtils.isNotNull(list)){
-            for (SysBook item:list) {
-                item.setCover("http://"+ IpUtils.getHostIp() + ":8080" + item.getCover());
-                item.setUrl("http://"+ IpUtils.getHostIp() + ":8080" + item.getUrl());
-            }
-        }
         return getDataTable(list);
     }
 

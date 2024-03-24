@@ -18,10 +18,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="year"    column="year"    />
         <result property="deptId"    column="dept_id"    />
+        <result property="evaluateStatus"    column="evaluate_status"    />
+        <result property="finish"    column="finish"    />
+        <result property="team"    column="team"    />
     </resultMap>
 
     <sql id="selectSysClassVo">
-        select id, number, name, start_date, end_date, introduction, del_flag, create_by, create_time, update_by, update_time, year, dept_id from sys_class
+        select id, number, name, start_date, end_date, introduction, del_flag, create_by, create_time, update_by, update_time, year, dept_id, evaluate_status, finish, team from sys_class
     </sql>
 
     <select id="selectSysClassList" parameterType="SysClass" resultMap="SysClassResult">
@@ -33,13 +36,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startDate != null "> and start_date = #{startDate}</if>
             <if test="endDate != null "> and end_date = #{endDate}</if>
             <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="team != null and team != '' "> and team = #{team}</if>
         </where>
+    </select>
+
+    <select id="countSysClassByYear" parameterType="java.lang.Integer">
+        select count(*) from sys_class where year = #{year} and del_flag = '0'
     </select>
 
     <select id="selectSysClassById" parameterType="Long" resultMap="SysClassResult">
         <include refid="selectSysClassVo"/>
         where id = #{id}
     </select>
+
     <select id="selectLastSysClassByNumber" resultMap="SysClassResult">
         SELECT id
         FROM sys_class
@@ -47,11 +56,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY number DESC
         LIMIT 1
     </select>
+
     <select id="selectNowClassId" resultMap="SysClassResult">
         <include refid="selectSysClassVo"/>
         order by number desc
         limit 1
     </select>
+
     <select id="selectChartInfoById" resultMap="SysClassResult">
         <include refid="selectSysClassVo"/>
         where year = (
@@ -77,6 +88,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="year != null">year,</if>
             <if test="deptId != null">dept_id,</if>
+            <if test="evaluateStatus != null">evaluate_status,</if>
+            <if test="finish != null">finish,</if>
+            <if test="team != null">team,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="number != null">#{number},</if>
@@ -91,6 +105,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="year != null">#{year},</if>
             <if test="deptId != null">#{deptId},</if>
+            <if test="evaluateStatus != null">#{evaluateStatus},</if>
+            <if test="finish != null">#{finish},</if>
+            <if test="team != null">#{team},</if>
          </trim>
     </insert>
 
@@ -109,8 +126,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="year != null">year = #{year},</if>
             <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="evaluateStatus != null">evaluate_status = #{evaluateStatus},</if>
+            <if test="finish != null">finish = #{finish},</if>
+            <if test="team != null">team = #{team},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="cancelStudentByDeptId" parameterType="Long">
+        update sys_user set status = '1' where dept_id = #{deptId}
     </update>
 
     <delete id="deleteSysClassById" parameterType="Long">

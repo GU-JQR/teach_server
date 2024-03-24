@@ -155,11 +155,11 @@ public interface ISysUserService
     /**
      * 修改用户头像
      * 
-     * @param userName 用户名
+     * @param user 用户名
      * @param avatar 头像地址
      * @return 结果
      */
-    public boolean updateUserAvatar(String userName, String avatar);
+    public boolean updateUserAvatar(SysUser user, String avatar);
 
     /**
      * 重置用户密码

@@ -214,6 +214,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		update sys_user set password = #{password} where user_name = #{userName}
 	</update>
 	
+	<update id="updateStudentAvatarByUserId" parameterType="SysUser">
+		update sys_student set avatar = #{avatar} where user_id = #{userId}
+	</update>
+	
 	<delete id="deleteUserById" parameterType="Long">
  		update sys_user set del_flag = '2' where user_id = #{userId}
  	</delete>

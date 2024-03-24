@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.mapper.SysDeptMapper;
+import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.teach.domain.SysStudent;
 import com.ruoyi.teach.domain.vo.ClassTreeVO;
 import com.ruoyi.teach.mapper.SysStudentMapper;
@@ -37,6 +39,9 @@ public class SysClassServiceImpl implements ISysClassService
 
     @Autowired
     private SysDeptMapper sysDeptMapper;
+
+    @Autowired
+    private SysDictDataMapper sysDictDataMapper;
 
     /**
      * 查询学员分期
@@ -75,7 +80,10 @@ public class SysClassServiceImpl implements ISysClassService
         sysClass.setCreateTime(DateUtils.getNowDate());
         LocalDateTime now = LocalDateTime.now();
         sysClass.setYear(now.getYear());
-        sysClass.setNumber(now.getYear()*10000+now.getMonthValue()*100+now.getDayOfMonth());
+        //期数编号 队伍编号+年份+期数
+        List<SysDictData> dictDatas = sysDictDataMapper.selectDictDataByType("sys_team_name");
+        Optional<SysDictData> dictData = dictDatas.stream().filter(k->k.getDictLabel().equals(sysClass.getTeam())).findFirst();
+        sysClass.setNumber(dictData.get().getDictValue() + now.getYear()+ String.format("%02d",sysClassMapper.countSysClassByYear(now.getYear())));
         //新建部门
         SysDept dept = new SysDept();
         dept.setParentId(102L);
@@ -99,7 +107,23 @@ public class SysClassServiceImpl implements ISysClassService
     public int updateSysClass(SysClass sysClass)
     {
         sysClass.setUpdateTime(DateUtils.getNowDate());
+        //期数编号 队伍编号+年份
+        LocalDateTime now = LocalDateTime.now();
+        sysClass.setYear(now.getYear());
+        List<SysDictData> dictDatas = sysDictDataMapper.selectDictDataByType("sys_team_name");
+        Optional<SysDictData> dictData = dictDatas.stream().filter(k->k.getDictLabel().equals(sysClass.getTeam())).findFirst();
+        sysClass.setNumber(dictData.get().getDictValue() + now.getYear() + String.format("%02d",sysClassMapper.countSysClassByYear(now.getYear())));
         return sysClassMapper.updateSysClass(sysClass);
+    }
+
+    /**
+     * 根据期数deptId注销学员
+     * @param sysClass
+     * @return
+     */
+    public int cancelStudentByDeptId(SysClass sysClass){
+        sysClassMapper.updateSysClass(sysClass);
+        return sysClassMapper.cancelStudentByDeptId(sysClass.getDeptId());
     }
 
     /**
@@ -134,25 +158,39 @@ public class SysClassServiceImpl implements ISysClassService
      */
     @Override
     public List<ClassTreeVO> selectClassTreeList(SysClass sysClass){
-        List<SysClass> classes = sysClassMapper.selectSysClassList(sysClass);
-        Map<Integer,List<ClassTreeVO>> map = new HashMap<>();
         List<ClassTreeVO> list = new ArrayList<>();
-        ClassTreeVO top = new ClassTreeVO(0L,"年份");
+        List<SysClass> classes = sysClassMapper.selectSysClassList(sysClass);
+        if(StringUtils.isNotNull(classes)){
+            Random random = new Random();
+            List<String> teams = classes.stream().map(k->k.getTeam()).distinct().collect(Collectors.toList());
+            for (String team:teams) {
+                List<SysClass> classe_temp = classes.stream().filter(v->v.getTeam().equals(team)).collect(Collectors.toList());
+                ClassTreeVO treeVO = new ClassTreeVO(random.nextLong(),team);
+                treeVO.getChildren().add(treeByYear(classe_temp));
+                list.add(treeVO);
+            }
+        }
+
+        return list;
+    }
+
+    public ClassTreeVO treeByYear(List<SysClass> classes){
+        Map<Integer,List<ClassTreeVO>> map = new HashMap<>();
+        Random random = new Random();
+        ClassTreeVO top = new ClassTreeVO(random.nextLong(),"年份");
         for (SysClass item:classes) {
             if(!StringUtils.isNotNull(map.get(item.getYear()))){
                 map.put(item.getYear(),new ArrayList<>());
             }
             map.get(item.getYear()).add(new ClassTreeVO(item.getId(),item.getName()));
         }
-        Long id = 0L;
         for (Integer key : map.keySet()) { //遍历key
-            id = id - 1;
-            ClassTreeVO node = new ClassTreeVO(id,key.toString());
+            ClassTreeVO node = new ClassTreeVO(random.nextLong(),key.toString());
             node.setChildren(map.get(key));
             top.getChildren().add(node);
         }
-        list.add(top);
-        return list;
+
+        return top;
     }
 
     @Override
@@ -174,12 +212,12 @@ public class SysClassServiceImpl implements ISysClassService
         for(int i=0;i<result.size();i++){
             listName.add((i+1)+"期");
         }
-        int num=0;
         for (Long item:result){
-            num++;
+            Optional<SysClass> sysClass = sysClassList.stream().filter(k -> k.getId().toString().equals(String.valueOf(item))).findFirst();
+            String name = sysClass.get().getName();
             SysStudent sysStudent = sysStudentMapper.selectSysStudentByClassId(item);
             if(sysStudent.isEmpty()){
-                return AjaxResult.error("第"+num+"期目前没有学员请前往后台添加");
+                return AjaxResult.error(name+"目前没有学员请前往后台添加");
             }
             listCount.add(sysStudent.getEnhanceCount());
             listPer.add(sysStudent.getEnhanceCount()*100/sysStudent.getClassStuCount());
