@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.teach.mapper.SysReviewMapper">
+    
+    <resultMap type="SysReview" id="SysReviewResult">
+        <result property="id"    column="id"    />
+        <result property="subject"    column="subject"    />
+        <result property="topic"    column="topic"    />
+        <result property="instructor"    column="instructor"    />
+        <result property="area"    column="area"    />
+        <result property="suggestion"    column="suggestion"    />
+        <result property="result"    column="result"    />
+        <result property="delFlag" column="del_flag"   />
+        <result property="reviewLeader"    column="review_leader"    />
+        <result property="reviewTime"    column="review_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectSysReviewVo">
+        select id, subject, topic, instructor, area, suggestion, del_flag, result, review_leader, review_time, create_time, create_by, update_time, update_by from sys_review
+    </sql>
+
+    <select id="selectSysReviewList" parameterType="SysReview" resultMap="SysReviewResult">
+        <include refid="selectSysReviewVo"/>
+        <where>
+            del_flag = '0'
+            <if test="subject != null  and subject != ''"> and subject = #{subject}</if>
+            <if test="topic != null  and topic != ''"> and topic = #{topic}</if>
+            <if test="instructor != null  and instructor != ''"> and instructor = #{instructor}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="suggestion != null  and suggestion != ''"> and suggestion = #{suggestion}</if>
+            <if test="result != null  and result != ''"> and result = #{result}</if>
+            <if test="reviewLeader != null  and reviewLeader != ''"> and review_leader = #{reviewLeader}</if>
+            <if test="reviewTime != null "> and review_time = #{reviewTime}</if>
+            <if test="id != null "> and id = #{id}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysReviewById" parameterType="Long" resultMap="SysReviewResult">
+        <include refid="selectSysReviewVo"/>
+        where id = #{id} and del_flag='0'
+    </select>
+        
+    <insert id="insertSysReview" parameterType="SysReview" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_review
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subject != null and subject != ''">subject,</if>
+            <if test="topic != null">topic,</if>
+            <if test="instructor != null">instructor,</if>
+            <if test="area != null">area,</if>
+            <if test="suggestion != null">suggestion,</if>
+            <if test="result != null">result,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="reviewLeader != null">review_leader,</if>
+            <if test="reviewTime != null">review_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subject != null and subject != ''">#{subject},</if>
+            <if test="topic != null">#{topic},</if>
+            <if test="instructor != null">#{instructor},</if>
+            <if test="area != null">#{area},</if>
+            <if test="suggestion != null">#{suggestion},</if>
+            <if test="result != null">#{result},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="reviewLeader != null">#{reviewLeader},</if>
+            <if test="reviewTime != null">#{reviewTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysReview" parameterType="SysReview">
+        update sys_review
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="subject != null and subject != ''">subject = #{subject},</if>
+            <if test="topic != null">topic = #{topic},</if>
+            <if test="instructor != null">instructor = #{instructor},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="suggestion != null">suggestion = #{suggestion},</if>
+            <if test="result != null">result = #{result},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="reviewLeader != null">review_leader = #{reviewLeader},</if>
+            <if test="reviewTime != null">review_time = #{reviewTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteSysReviewById" parameterType="Long">
+        update sys_review
+        set del_flag='2'
+        where id= #{id}
+    </update>
+
+    <update id="deleteSysReviewByIds" parameterType="String">
+        update sys_review
+        set del_flag='2'
+         where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

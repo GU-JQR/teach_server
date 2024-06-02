@@ -11,11 +11,13 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.teach.mapper.SysLabelMapper;
 import com.ruoyi.common.core.domain.entity.SysLabel;
 import com.ruoyi.teach.service.ISysLabelService;
+import org.springframework.util.ObjectUtils;
 
 /**
  * 标签信息Service业务层处理
@@ -147,8 +149,12 @@ public class SysLabelServiceImpl implements ISysLabelService
     @Override
     public int deleteSysLabelByLabelIds(Long[] labelIds)
     {
+
         return sysLabelMapper.deleteSysLabelByLabelIds(labelIds);
     }
+
+
+
 
     /**
      * 删除标签信息信息
@@ -181,6 +187,18 @@ public class SysLabelServiceImpl implements ISysLabelService
 
         List<SysLabel> labelList = sysLabelMapper.labelAncestorNameList(splitAncestors);
         return buildLabelTreeSelect(labelList);
+    }
+
+//    判断是否存在子菜单
+
+    @Override
+    public Boolean hasChildByLabelId(Long[] labelIds) {
+        for (Long labelId : labelIds) {
+            List<SysLabel> sysLabels = sysLabelMapper.hasChildByLabelId(labelId);
+            if(ObjectUtils.isEmpty(sysLabels))
+                return true;
+        }
+        return false;
     }
 
     /**

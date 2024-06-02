@@ -20,6 +20,14 @@ public interface SysUserMapper
     public List<SysUser> selectUserList(SysUser sysUser);
 
     /**
+     * 通过用户角色查询用户
+     *
+     * @param roleKey 角色
+     * @return 用户对象信息
+     */
+    public List<SysUser> selectUserByRoleKey(String roleKey);
+
+    /**
      * 根据条件分页查询已配用户角色列表
      * 
      * @param user 用户信息

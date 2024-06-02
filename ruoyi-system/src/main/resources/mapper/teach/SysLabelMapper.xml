@@ -65,6 +65,10 @@
             #{item}
         </foreach>
     </select>
+    <select id="hasChildByLabelId" resultMap="SysLabelResult">
+        <include refid="selectSysLabelVo"/>
+        where parent_id=#{labelId} and del_flag='0'
+    </select>
 
     <insert id="insertSysLabel" parameterType="SysLabel" useGeneratedKeys="true" keyProperty="labelId">
         insert into sys_label

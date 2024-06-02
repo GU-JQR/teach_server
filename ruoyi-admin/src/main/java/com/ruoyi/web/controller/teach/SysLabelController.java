@@ -106,6 +106,10 @@ public class SysLabelController extends BaseController {
     @Log(title = "标签信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{labelIds}")
     public AjaxResult remove(@PathVariable Long[] labelIds) {
+        if (!sysLabelService.hasChildByLabelId(labelIds))
+        {
+            return warn("存在子菜单,不允许删除");
+        }
         return toAjax(sysLabelService.deleteSysLabelByLabelIds(labelIds));
     }
 

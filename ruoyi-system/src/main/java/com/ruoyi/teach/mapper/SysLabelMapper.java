@@ -95,4 +95,6 @@ public interface SysLabelMapper
      * @return
      */
     List<SysLabel> labelAncestorNameList(String[] splitAncestors);
+
+    List<SysLabel> hasChildByLabelId(Long labelId);
 }

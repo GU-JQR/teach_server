@@ -90,4 +90,6 @@ public interface ISysLabelService
 
 
     List<TreeSelect> labelAncestorNameList(String[] splitAncestors);
+
+    Boolean hasChildByLabelId(Long[] labelIds);
 }

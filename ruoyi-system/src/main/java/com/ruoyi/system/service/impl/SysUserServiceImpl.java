@@ -125,6 +125,17 @@ public class SysUserServiceImpl implements ISysUserService
     }
 
     /**
+     * 通过用户角色查询用户
+     *
+     * @param roleKey 角色
+     * @return 用户对象信息
+     */
+    @Override
+    public List<SysUser> selectUserByRoleKey(String roleKey){
+        return userMapper.selectUserByRoleKey(roleKey);
+    }
+
+    /**
      * 查询用户所属角色组
      * 
      * @param userName 用户名

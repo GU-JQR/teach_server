@@ -51,6 +51,14 @@ public interface ISysUserService
     public SysUser selectUserById(Long userId);
 
     /**
+     * 通过用户角色查询用户
+     *
+     * @param roleKey 角色
+     * @return 用户对象信息
+     */
+    public List<SysUser> selectUserByRoleKey(String roleKey);
+
+    /**
      * 根据用户ID查询用户所属角色组
      * 
      * @param userName 用户名

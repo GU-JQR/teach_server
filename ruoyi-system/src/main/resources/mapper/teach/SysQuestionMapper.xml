@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.teach.mapper.SysQuestionMapper">
+    
+    <resultMap type="SysQuestion" id="SysQuestionResult">
+        <result property="id"    column="id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="className"    column="class_name"    />
+        <result property="question"    column="question"    />
+        <result property="optionOne"    column="option_one"    />
+        <result property="scoreOne"    column="score_one"    />
+        <result property="optionTwo"    column="option_two"    />
+        <result property="scoreTwo"    column="score_two"    />
+        <result property="optionThree"    column="option_three"    />
+        <result property="scoreThree"    column="score_three"    />
+        <result property="optionFour"    column="option_four"    />
+        <result property="scoreFour"    column="score_four"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="questionType"    column="question_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysQuestionVo">
+        select id, class_id, class_name, question, option_one, score_one, option_two, score_two, option_three, score_three, option_four, score_four, del_flag, question_type, create_by, create_time, update_by, update_time from sys_question
+    </sql>
+
+    <select id="selectSysQuestionList" parameterType="SysQuestion" resultMap="SysQuestionResult">
+        <include refid="selectSysQuestionVo"/>
+        where del_flag = '0'
+        <if test="classId != null "> and class_id = #{classId}</if>
+        <if test="question != null  and question != ''"> and question = #{question}</if>
+        <if test="questionType != null  and questionType != ''"> and question_type = #{questionType}</if>
+    </select>
+
+    <select id="selectSysQuestionListByClassId" parameterType="java.lang.Long" resultMap="SysQuestionResult">
+        <include refid="selectSysQuestionVo"/>
+        where del_flag = '0' and class_id = #{classId}
+    </select>
+    
+    <select id="selectSysQuestionById" parameterType="Long" resultMap="SysQuestionResult">
+        <include refid="selectSysQuestionVo"/>
+        where id = #{id} and del_flag = '0'
+    </select>
+        
+    <insert id="insertSysQuestion" parameterType="SysQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classId != null">class_id,</if>
+            <if test="className != null and className != ''">class_name,</if>
+            <if test="question != null and question != ''">question,</if>
+            <if test="optionOne != null and optionOne != ''">option_one,</if>
+            <if test="scoreOne != null">score_one,</if>
+            <if test="optionTwo != null and optionTwo != ''">option_two,</if>
+            <if test="scoreTwo != null">score_two,</if>
+            <if test="optionThree != null and optionThree != ''">option_three,</if>
+            <if test="scoreThree != null">score_three,</if>
+            <if test="optionFour != null and optionFour != ''">option_four,</if>
+            <if test="scoreFour != null">score_four,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="questionType != null and questionType != ''">question_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classId != null">#{classId},</if>
+            <if test="className != null and className != ''">#{className},</if>
+            <if test="question != null and question != ''">#{question},</if>
+            <if test="optionOne != null and optionOne != ''">#{optionOne},</if>
+            <if test="scoreOne != null">#{scoreOne},</if>
+            <if test="optionTwo != null and optionTwo != ''">#{optionTwo},</if>
+            <if test="scoreTwo != null">#{scoreTwo},</if>
+            <if test="optionThree != null and optionThree != ''">#{optionThree},</if>
+            <if test="scoreThree != null">#{scoreThree},</if>
+            <if test="optionFour != null and optionFour != ''">#{optionFour},</if>
+            <if test="scoreFour != null">#{scoreFour},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="questionType != null and questionType != ''">#{questionType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysQuestion" parameterType="SysQuestion">
+        update sys_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="className != null and className != ''">class_name = #{className},</if>
+            <if test="question != null and question != ''">question = #{question},</if>
+            <if test="optionOne != null and optionOne != ''">option_one = #{optionOne},</if>
+            <if test="scoreOne != null">score_one = #{scoreOne},</if>
+            <if test="optionTwo != null and optionTwo != ''">option_two = #{optionTwo},</if>
+            <if test="scoreTwo != null">score_two = #{scoreTwo},</if>
+            <if test="optionThree != null and optionThree != ''">option_three = #{optionThree},</if>
+            <if test="scoreThree != null">score_three = #{scoreThree},</if>
+            <if test="optionFour != null and optionFour != ''">option_four = #{optionFour},</if>
+            <if test="scoreFour != null">score_four = #{scoreFour},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="questionType != null and questionType != ''">question_type = #{questionType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysQuestionById" parameterType="Long">
+        update sys_question set del_flag = '2' where id = #{id}
+    </delete>
+
+    <delete id="deleteSysQuestionByIds" parameterType="String">
+        update sys_question set del_flag = '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

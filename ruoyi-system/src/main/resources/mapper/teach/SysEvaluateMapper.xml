@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.teach.mapper.SysEvaluateMapper">
+    
+    <resultMap type="SysEvaluate" id="SysEvaluateResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="result"    column="result"    />
+        <result property="total"    column="total"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="studentName"    column="student_name"    />
+        <result property="className"    column="class_name"    />
+    </resultMap>
+
+    <sql id="selectSysEvaluateVo">
+        select id, student_id, class_id, result, total, status, del_flag, create_by, create_time, update_by, update_time from sys_evaluate
+    </sql>
+
+    <select id="selectSysEvaluateList" parameterType="SysEvaluate" resultMap="SysEvaluateResult">
+        select e.id, e.student_id, s.name as student_name, e.class_id, c.name as class_name, e.result, e.total, e.status, e.del_flag, e.create_by, e.create_time, e.update_by, e.update_time from sys_evaluate e
+        left join sys_student s on e.student_id = s.id
+        left join sys_class c on e.class_id = c.id
+        where e.del_flag = '0'
+        <if test="studentName != null and studentName != ''"> and s.name like concat('%', #{studentName}, '%')</if>
+        <if test="className != null and className != ''"> and c.name like concat('%', #{className}, '%')</if>
+        <if test="classId != null"> and e.class_id = #{classId}</if>
+        <if test="status != null  and status != ''"> and e.status = #{status}</if>
+    </select>
+
+    <select id="selectSysEvaluateListByClassId" parameterType="java.lang.Long" resultMap="SysEvaluateResult">
+        select e.id, e.student_id, s.name as student_name, e.class_id, c.name as class_name, e.result, e.total, e.status, e.del_flag, e.create_by, e.create_time, e.update_by, e.update_time from sys_evaluate e
+        left join sys_student s on e.student_id = s.id
+        left join sys_class c on e.class_id = c.id
+        where e.del_flag = '0' and e.class_id = #{classId}
+    </select>
+    
+    <select id="selectSysEvaluateById" parameterType="Long" resultMap="SysEvaluateResult">
+        select e.id, e.student_id, s.name as student_name, e.class_id, c.name as class_name, e.result, e.total, e.status, e.del_flag, e.create_by, e.create_time, e.update_by, e.update_time from sys_evaluate e
+        left join sys_student s on e.student_id = s.id
+        left join sys_class c on e.class_id = c.id
+        where e.del_flag = '0' and e.id = #{id}
+    </select>
+
+    <select id="queryEvaluateByUserId" parameterType="Long">
+        select count(*) from sys_evaluate e left join sys_student s on e.student_id = s.id where user_id = #{userId} and status = '1'
+    </select>
+        
+    <insert id="insertSysEvaluate" parameterType="SysEvaluate" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_evaluate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="result != null and result != ''">result,</if>
+            <if test="total != null">total,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="result != null and result != ''">#{result},</if>
+            <if test="total != null">#{total},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysEvaluate" parameterType="SysEvaluate">
+        update sys_evaluate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="result != null and result != ''">result = #{result},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysEvaluateById" parameterType="Long">
+        update sys_evaluate set del_flag = '2' where id = #{id}
+    </delete>
+
+    <delete id="deleteSysEvaluateByIds" parameterType="String">
+        update sys_evaluate set del_flag = '2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
