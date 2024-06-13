@@ -90,7 +90,7 @@ public class SysLabelController extends BaseController {
     }
 
     /**
-     * 修改标签信息
+     *
      */
     @PreAuthorize("@ss.hasPermi('teach:label:edit')")
     @Log(title = "标签信息", businessType = BusinessType.UPDATE)
